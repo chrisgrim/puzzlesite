@@ -1,3 +1,0 @@
-<header>
-	hey there
-</header>

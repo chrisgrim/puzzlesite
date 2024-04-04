@@ -12,7 +12,7 @@
 
 @section('content')
     <main class="min-h-[30rem]">
-        <chapter-one></chapter-one>
+        <login></login>
     </main>
 @endsection
 
@@ -24,4 +24,3 @@
 </footer>
 
 @endsection 
-
