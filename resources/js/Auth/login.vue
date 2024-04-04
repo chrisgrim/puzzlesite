@@ -36,17 +36,12 @@
 			            <div v-if="errors.length > 0" class="text-red-500 text-lg italic">
 					        <p class="error" v-for="(error, index) in errors" :key="index">{{ error }}</p>
 					    </div>
-			            <div class="password">
-			                <svg class="w-8 h-8 absolute top-6 right-12"
-			                    @click="isVisible=!isVisible">
-			                    <use 
-			                        v-if="isVisible" 
-			                        :xlink:href="`/storage/website-files/icons.svg#ri-eye-off-line`" />
-			                    <use 
-			                        v-else 
-			                        :xlink:href="`/storage/website-files/icons.svg#ri-eye-line`" />
-			                </svg>
-			            </div>
+			            <div class="password relative">
+						    <button class="absolute top-6 right-12" @click="isVisible = !isVisible">
+						        <span v-if="isVisible">🚫</span>
+						        <span v-else>👁</span>
+						    </button>
+						</div>
 			        </div>
 			        <div class="field mt-2">
 			            <transition name="fade" mode="out-in">
@@ -141,13 +136,14 @@ export default {
                 const res = await axios.post(`/authenticate`, form.user);
                 location.reload();
             } catch (err) {
-                if (err.response && err.response.data && err.response.data.errors) {
-                    for (const [key, value] of Object.entries(err.response.data.errors)) {
-                        form.errors.value.push(...value);
-                    }
-                } else {
-                    form.errors.value.push('An unexpected error occurred.');
-                }
+            	console.log(err)
+                // if (err.response && err.response.data && err.response.data.errors) {
+                //     for (const [key, value] of Object.entries(err.response.data.errors)) {
+                //         form.errors.value.push(...value);
+                //     }
+                // } else {
+                //     form.errors.value.push('An unexpected error occurred.');
+                // }
             }
         };
 

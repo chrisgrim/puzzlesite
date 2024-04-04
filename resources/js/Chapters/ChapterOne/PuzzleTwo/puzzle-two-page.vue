@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-40">
+    <div class="my-40">
         <div class="relative mx-auto touch-none place-content-center w-full grid">
             <svg ref="svgElement" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                 <!-- Paths for Correct Answers -->
@@ -33,8 +33,8 @@ const puzzleLayout = [
     'A', 'M', 'Y', 'S', 'I', 'L',
     'L', 'P', 'C', 'P', 'Q', 'R',
     'E', 'L', 'U', 'V', 'W', 'X',
-    'Y', 'Z', 'A', 'B', 'C', 'D',
-    'E', 'F', 'G', 'H', 'I', 'J',
+    'Y', 'G', 'L', 'B', 'C', 'D',
+    'U', 'Y', 'G', 'H', 'I', 'J',
     'K', 'L', 'M', 'N', 'O', 'P',
     'Q', 'R', 'S', 'T', 'U', 'V'
 ];
@@ -45,7 +45,7 @@ const letters = puzzleLayout.map((letter, index) => ({
     letter
 }));
 
-const correctAnswers = ['EXAMPLE', 'LUCY', 'CHRIS'];
+const correctAnswers = ['EXAMPLE', 'LUCY', 'CHRIS', 'UGLY'];
 const selectedLetters = ref([]);
 const selectedIndices = ref([]);
 const selectedIds = ref([]);

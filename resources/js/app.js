@@ -18,6 +18,10 @@ const Login = defineAsyncComponent(() => import('./Auth/login.vue'));
 
 const app = createApp({});
 
+// Setup axios
+window.axios = axios;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 app.component('nav-bar', NavBar);
 
 app.component('chapter-one', ChapterOne);

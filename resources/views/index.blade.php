@@ -6,7 +6,7 @@
 
 @section('nav')
     <nav class="border-b h-24">
-        <nav-bar></nav-bar>
+        <nav-bar :user="{{ auth()->user() ? auth()->user()->toJson() : 'null' }}"></nav-bar>
     </nav>
 @endsection
 
