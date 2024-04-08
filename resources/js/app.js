@@ -12,6 +12,7 @@ const PuzzleTwo = defineAsyncComponent(() => import('./Chapters/ChapterOne/Puzzl
 
 
 const Login = defineAsyncComponent(() => import('./Auth/login.vue'));
+const Purchase = defineAsyncComponent(() => import('./Auth/purchase.vue'));
 
 
 
@@ -29,6 +30,7 @@ app.component('puzzle-one', PuzzleOne);
 app.component('puzzle-two', PuzzleTwo);
 
 app.component('login', Login);
+app.component('purchase', Purchase);
 
 
 
