@@ -9,8 +9,8 @@
 @endsection
 
 @section('content')
-    <main class="min-h-screen">
-        <purchase :user="user"></purchase>
+    <main class="min-h-[30rem]">
+        <vue-reset-password/>
     </main>
 @endsection
 
@@ -22,4 +22,3 @@
 </footer>
 
 @endsection 
-

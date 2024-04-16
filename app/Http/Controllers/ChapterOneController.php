@@ -15,4 +15,8 @@ class ChapterOneController extends Controller
     {
         return view('ChapterOne.puzzle-two'); // Assuming you have an index.blade.php file in your resources/views directory
     }
+    public function puzzleThree()
+    {
+        return view('ChapterOne.puzzle-three'); // Assuming you have an index.blade.php file in your resources/views directory
+    }
 }

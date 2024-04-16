@@ -37,7 +37,16 @@ Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
                 ->middleware(['auth', 'throttle:6,1'])
                 ->name('verification.send');
+                
+Route::get('/password-reset/{token}', function () { return view('auth.reset-password'); })
+                ->middleware('guest')
+                ->name('password.reset');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth')
                 ->name('logout');
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])
+                ->name('auth.google');
+
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);

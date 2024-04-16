@@ -2,7 +2,10 @@
     <div class="justify-between items-center flex h-24 max-w-screen-lg mx-auto px-6">
         <div>
             <a href="/">
-                <h2>Puzzle Site</h2>
+                <div class="relative h-32 w-32 flex items-center justify-center">
+                    <div class="absolute bg-stone-500 rounded-full h-16 w-16 opacity-50" style="left: 0%;"></div>
+                    <div class="absolute bg-stone-500 rounded-full h-16 w-16 opacity-50" style="right: 10%;"></div>
+                </div>
             </a>
         </div>
         <div class="relative" ref="dropdownWrapper">

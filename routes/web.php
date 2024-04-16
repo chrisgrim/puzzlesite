@@ -10,16 +10,22 @@ use App\Http\Controllers\Auth\LoginController;
 
 
 Route::get('/', [IndexController::class, 'index']);
-
 Route::get('/user/login', [LoginController::class, 'login']);
-
-
 Route::get('/chapter-one/puzzle-one', [ChapterOneController::class, 'puzzleOne']);
 Route::get('/chapter-one/puzzle-two', [ChapterOneController::class, 'puzzleTwo']);
+Route::get('/chapter-one/puzzle-three', [ChapterOneController::class, 'puzzleThree']);
 
 
-Route::get('/purchase', [PurchaseController::class, 'index'])->name('purchase.index');
-Route::post('/purchase', [PurchaseController::class, 'store'])->name('purchase.store');
+// Purchase Routes
+Route::post('/process-payment', [PurchaseController::class, 'processPayment'])->middleware('auth');
+Route::get('/checkout', [PurchaseController::class, 'index'])
+                ->name('purchase.index');
+Route::get('/checkout/success', [PurchaseController::class, 'success'])->name('checkout.success');
+
+
+Route::get('/checkout', [PurchaseController::class, 'index'])
+                // ->middleware('redirectIfPaid')
+                ->name('purchase.index');
 
 
 

@@ -1,22 +1,54 @@
 <template>
-    <div class="max-w-[50rem] m-auto my-40">
-        <div class="grid grid-cols-4 gap-4">
-            <div v-for="wordObj in words" :key="wordObj.id" 
-                :class="getClass(wordObj.id)"
-                @click="selectWord(wordObj.id)">
-                {{ wordObj.word }}
+    <div class="max-w-screen-lg m-auto my-24 p-8">
+        <div class="flex items-center mb-20">
+            <a href="/" class="uppercase">< Back to story</a>
+        </div>
+
+        <div id="Header" class="my-10 mb-40">
+            <h2 class="text-9xl">Morning Coffee</h2>
+            <div class="flex flex-row mt-14 gap-4">
+                <div class="bg-red-200 w-10 h-10 rounded-full shadow-inner-shadow"></div>
+                <div class="bg-red-200 w-10 h-10 rounded-full shadow-inner-shadow"></div>
+                <div class="bg-white w-10 h-10 rounded-full shadow-inner-shadow"></div>
+            </div>
+            <p class="mt-14">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim <span class="selection:text-fuchsia-900 selection:bg-fuchsia-300">tedz</span>id est laborum.</p>
+        </div>
+
+        <div id="Puzzle" class="max-w-[50rem] m-auto">
+            <div class="grid grid-cols-4 gap-4">
+                <div v-for="wordObj in words" :key="wordObj.id" 
+                    :class="getClass(wordObj.id)"
+                    @click="selectWord(wordObj.id)">
+                    {{ wordObj.word }}
+                </div>
+            </div>
+            <div class="mt-4 flex justify-between">
+                <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700" 
+                        @click="checkSelection"
+                        :disabled="selectedWords.length !== 4">
+                    Check Words
+                </button>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        @click="shuffleWords">
+                    Shuffle
+                </button>
             </div>
         </div>
-        <div class="mt-4 flex justify-between">
-            <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700" 
-                    @click="checkSelection"
-                    :disabled="selectedWords.length !== 4">
-                Check Words
-            </button>
-            <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                    @click="shuffleWords">
-                Shuffle
-            </button>
+
+        <div id="Solution" class="mt-40 p-8">
+            <div class="border-r border">
+                <div>
+                    <p>What did ALbert get</p>
+                </div>
+                <div class="flex flex-row">
+                    <input type="text" name="Solutin" class="mt-12 bg-white"><button>Guess</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -59,9 +91,9 @@ const checkSelection = () => {
 };
 
 const getClass = (id) => ({
-    'flex justify-center items-center h-24 text-center shadow-md cursor-pointer': true,
-    'bg-blue-500': selectedWords.value.includes(id),
-    'bg-blue-200': !selectedWords.value.includes(id),
+    'flex justify-center items-center h-24 text-center border border-stone-400 cursor-pointer h-40': true,
+    'bg-stone-500 text-white': selectedWords.value.includes(id),
+    '': !selectedWords.value.includes(id),
 });
 
 // Function to shuffle the words

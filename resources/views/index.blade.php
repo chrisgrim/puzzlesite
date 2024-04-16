@@ -5,13 +5,12 @@
 @endsection 
 
 @section('nav')
-    <nav class="border-b h-24">
-        <nav-bar :user="{{ auth()->user() ? auth()->user()->toJson() : 'null' }}"></nav-bar>
-    </nav>
+    @include('Layouts.nav')
 @endsection
 
 @section('content')
-    <main class="min-h-[30rem]">
+    <main class="min-h-screen">
+        <side-bar></side-bar>
         <chapter-one></chapter-one>
     </main>
 @endsection

@@ -5,9 +5,7 @@
 @endsection 
 
 @section('nav')
-    <nav class="border-b h-24">
-        <nav-bar></nav-bar>
-    </nav>
+    @include('Layouts.nav')
 @endsection
 
 @section('content')

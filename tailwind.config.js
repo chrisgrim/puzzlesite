@@ -1,16 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./resources/**/*.blade.php",
-    "./resources/**/*.js",
-    "./resources/**/*.vue",
+    content: [
+        "./resources/**/*.blade.php",
+        "./resources/**/*.js",
+        "./resources/**/*.vue",
   ],
-  theme: {
-    fontSize: {
+    theme: {
+        fontSize: {
             'xs': '.75rem',
             'sm': '.875rem',
             'tiny': '.875rem',
             'base': '1rem',
+            'md': '1.25rem',
             'lg': '1.5rem',
             'xl': '1.6rem',
             '1xl': '1.7rem',
@@ -20,9 +21,18 @@ export default {
             '5xl': '3rem',
             '6xl': '4rem',
             '7xl': '5rem',
+            '8xl': '6rem',
+            '9xl': '7rem',
     },
-    extend: {},
-  },
-  plugins: [],
+    extend: {
+        fontFamily: {
+            source: ['Source Code Pro', 'monospace'],
+        },
+        boxShadow: {
+            'inner-shadow': 'inset 2px 2px 4px 1px rgba(0, 0, 0, 0.8)',
+        },
+    },
+},
+    plugins: [],
 }
 

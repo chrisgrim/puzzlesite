@@ -7,6 +7,17 @@
 <link rel="mask-icon" href="/storage/website-files/favicons/safari-pinned-tab.svg" color="#f7653b">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#f7653b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<script>
+    window.Laravel = {
+        user: {!! Auth::check() ? json_encode([
+            'id' => Auth::user()->id,
+            'email' => Auth::user()->email,
+        ]) : 'null' !!}
+    };
+</script>
 @yield('head')
 
 

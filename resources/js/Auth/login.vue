@@ -5,7 +5,7 @@
             <div class="flex flex-col h-full justify-start p-8 w-full">
                 <div class="login-form">
 			        <div class="field">
-			            <h3 class="mb-8 mt-4 text-center">Join us</h3>
+			            <h3 class="mb-8 mt-4">Welcome to Everything Immersive</h3>
 			            <input 
 			                id="email" 
 			                type="email" 
@@ -17,13 +17,11 @@
 			                required
 			                placeholder="email" 
 			                autofocus>
-			            <p v-if="v$.user.email.$dirty && v$.user.email.required.$invalid" class="text-red-500 text-lg italic">The email is required</p>
-						<p v-if="v$.user.email.$dirty && v$.user.email.email.$invalid" class="text-red-500 text-lg italic">Must be an email</p>
 			        </div>
 			        <div class="field">
 			            <input 
 			                id="password" 
-			                class="bg-white border border-gray-300 rounded-b-lg border-t-0 text-gray-700 font-montserrat text-base md:text-lg px-4 py-5 relative transition duration-200 w-full focus:border-t-0 focus:rounded-b-lg"
+			                class="bg-white border border-gray-300 rounded-b-lg border-t-0 text-gray-700 font-montserrat text-base md:text-lg px-4 py-5 relative transition duration-200 w-full focus:border-t-0 focus:rounded-b-lg mb-4"
 			                :type="isVisible ? 'text' : 'password'" 
 			                v-model="user.password"
 			                :class="{'error': v$.user.password.$error || !v$.user.email.serverFailed }"
@@ -31,18 +29,16 @@
 			                @keyup.enter="onSubmit"
 			                required
 			                placeholder="password">
-			            <p v-if="v$.user.password.$dirty && v$.user.password.required.$invalid" class="text-red-500 text-lg italic">The password is required.</p>
-						<p v-if="v$.user.password.$dirty && v$.user.password.minLength.$invalid" class="text-red-500 text-lg italic">The password must be at least 8 characters long.</p>
-			            <div v-if="errors.length > 0" class="text-red-500 text-lg italic">
-					        <p class="error" v-for="(error, index) in errors" :key="index">{{ error }}</p>
-					    </div>
-			            <div class="password relative">
-						    <button class="absolute top-6 right-12" @click="isVisible = !isVisible">
-						        <span v-if="isVisible">🚫</span>
-						        <span v-else>👁</span>
-						    </button>
-						</div>
 			        </div>
+			        <p v-if="v$.user.email.$dirty && v$.user.email.required.$invalid" class="text-red-500 text-lg">The email is required</p>
+					<p v-if="v$.user.email.$dirty && v$.user.email.email.$invalid" class="text-red-500 text-lg">Must be an email</p>
+		            <p v-if="v$.user.password.$dirty && v$.user.password.required.$invalid" class="text-red-500 text-lg">The password is required.</p>
+					<p v-if="v$.user.password.$dirty && v$.user.password.minLength.$invalid" class="text-red-500 text-lg">The password must be at least 8 characters long.</p>
+		            <div v-if="Object.keys(errors).length > 0">
+					    <div v-for="(errorMessages, fieldName) in errors" :key="fieldName">
+					        <p class="text-red-500 text-xl" v-for="(error, index) in errorMessages" :key="index">{{ error }}</p>
+					    </div>
+					</div>
 			        <div class="field mt-2">
 			            <transition name="fade" mode="out-in">
 			                <template v-if="true">
@@ -79,12 +75,11 @@
 			        </div>
 			    </div>
 			    <div class="border-t border-gray-300 pt-8 mt-4">
-	            	<button class="border border-black w-full flex items-center justify-center p-6 rounded-2xl mb-8">
-	            		Continue with Google
-	            	</button>
-	            	<button class="border border-black w-full flex items-center justify-center p-6 rounded-2xl">
-	            		Continue with Apple
-	            	</button>
+			    	<a href="/auth/google">
+			    		<button class="border border-black w-full flex items-center justify-center p-6 rounded-2xl mb-8">
+		            		Continue with Google
+		            	</button>
+			    	</a>
 	            </div>
             </div>
         </div>
@@ -107,7 +102,7 @@ export default {
             isVisible:false,
             isDisabled: false,
             disabled: false, 
-            errors: {},
+            errors: [],
         });
 
         const rules = {
@@ -134,29 +129,42 @@ export default {
             
             try {
                 const res = await axios.post(`/authenticate`, form.user);
-                location.reload();
+                console.log(res);
+                // location.reload();
             } catch (err) {
-            	console.log(err)
-                // if (err.response && err.response.data && err.response.data.errors) {
-                //     for (const [key, value] of Object.entries(err.response.data.errors)) {
-                //         form.errors.value.push(...value);
-                //     }
-                // } else {
-                //     form.errors.value.push('An unexpected error occurred.');
-                // }
+            	
+                if (err.response.data && typeof err.response.data === 'object') {
+		            form.errors = err.response.data.errors;
+		        } else {
+		            form.errors = { general: ['An unexpected error occurred.'] };
+		        }
             }
         };
 
-        const forgotPassword = () => {
-            axios.post('/forgot-password', { email: user.value.email })
-                .then(response => {
-                    alert("Reset link sent! Check your email.");
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+        const forgotPassword = async () => {
+
+            form.errors = {};
+
+            await v$.value.user.email.$validate();
+            if (v$.value.user.email.$invalid) return 
+
+
+            try {
+                const res = await axios.post('/forgot-password', { email: form.user.email });
+                alert("Reset link sent! Check your email.");
+
+            } catch (err) {
+                if (err.response.data && typeof err.response.data === 'object') {
+		            form.errors = err.response.data.errors;
+		        } else {
+					form.errors = { general: ['An unexpected error occurred.'] };
+		        }
+            }
         };
 
+        const closeWindow = () => {
+	        context.emit('close', false);
+	    };
 
         const clearServerError = (fieldName) => {
             if (form.errors[fieldName]) {
@@ -164,7 +172,7 @@ export default {
             }
         };
 
-        return { ...toRefs(form), v$, onSubmit, forgotPassword, clearServerError };
+        return { ...toRefs(form), v$, onSubmit, forgotPassword, closeWindow, clearServerError };
     }
 }
 </script>

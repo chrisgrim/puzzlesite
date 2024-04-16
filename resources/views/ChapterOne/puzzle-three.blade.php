@@ -8,9 +8,10 @@
     @include('Layouts.nav')
 @endsection
 
+
 @section('content')
-    <main class="min-h-screen">
-        <purchase :user="user"></purchase>
+    <main class="min-h-[30rem]">
+        <puzzle-three></puzzle-three>
     </main>
 @endsection
 
