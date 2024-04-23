@@ -8,9 +8,10 @@
     @include('Layouts.nav')
 @endsection
 
+
 @section('content')
-    <main class="min-h-screen">
-        <home></home>
+    <main class="min-h-[30rem]">
+        <puzzle-one-four :puzzle="{{ $puzzle }}" :chapter="{{ $chapter }}" :solution="{{ $solution }}" :user="user"></puzzle-one-four>
     </main>
 @endsection
 
@@ -22,4 +23,3 @@
 </footer>
 
 @endsection 
-

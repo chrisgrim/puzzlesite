@@ -8,10 +8,11 @@
     @include('Layouts.nav')
 @endsection
 
-
 @section('content')
-    <main class="min-h-[30rem]">
-        <puzzle-two></puzzle-two>
+    <main class="min-h-screen">
+        <side-bar></side-bar>
+        <chapter-one></chapter-one>
+        <chapter-two></chapter-two>
     </main>
 @endsection
 

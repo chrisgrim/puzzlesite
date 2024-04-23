@@ -48,8 +48,29 @@ class User extends Authenticatable
         ];
     }
 
+    public function progress()
+    {
+        return $this->hasMany(UserProgress::class);
+    }
+    
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasOne(Order::class);
     }
+
+    public function solutions()
+    {
+        return $this->hasMany(Solution::class);
+    }
+ 
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function hasSolvedPuzzle($puzzleId)
+    {
+        return $this->solutions()->where('puzzle_id', $puzzleId)->where('solved', true)->exists();
+    }
+
 }

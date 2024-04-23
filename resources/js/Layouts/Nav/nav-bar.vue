@@ -1,5 +1,5 @@
 <template>
-    <div class="justify-between items-center flex h-24 max-w-screen-lg mx-auto px-6">
+    <div class="justify-between items-center flex h-32 max-w-screen-lg mx-auto px-6">
         <div>
             <a href="/">
                 <div class="relative h-32 w-32 flex items-center justify-center">
@@ -8,21 +8,20 @@
                 </div>
             </a>
         </div>
-        <div class="relative" ref="dropdownWrapper">
-            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="toggleDropdown">
-                Profile
-                <!-- SVG icon remains unchanged -->
-            </button>
-            <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
-                <!-- Conditionally render links based on user's authentication status -->
-                <template v-if="user">
-                    <a href="/user/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-                    <a href="/user/logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
-                </template>
-                <template v-else>
-                    <a href="/user/login" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Login</a>
-                    <a href="/user/register" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Register</a>
-                </template>
+        <div class="relative" ref="dropdownWrapper" v-if="user">
+            <div class="text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center cursor-pointer" @click="toggleDropdown">
+                <h2 class="hover:underline-animation">The Reader</h2>
+            </div>
+            <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-48 overflow-hidden shadow-xl z-10">
+                <a href="/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-400">Profile</a>
+                <div @click="logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-400 cursor-pointer">Logout</div>
+            </div>
+        </div>
+        <div class="relative" v-else>
+            <div class="text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center cursor-pointer" @click="toggleDropdown">
+                <a href="/enter-the-story">
+                    <h2>Enter</h2>
+                </a>
             </div>
         </div>
     </div>
@@ -42,19 +41,21 @@ const props = defineProps({
 const dropdownOpen = ref(false);
 const dropdownWrapper = ref(null);
 
-// Toggle dropdown method
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
 };
 
-// Close dropdown method
+const logout = async () => {
+    await axios.post('/logout');
+    location.reload();
+};
+
 const closeDropdown = (event) => {
     if (!dropdownWrapper.value.contains(event.target)) {
         dropdownOpen.value = false;
     }
 };
 
-// Method to handle outside click
 const handleOutsideClick = (event) => {
     if (!dropdownWrapper.value.contains(event.target)) {
         dropdownOpen.value = false;
@@ -70,3 +71,36 @@ onUnmounted(() => {
     document.removeEventListener('click', handleOutsideClick);
 });
 </script>
+
+<style>
+    @keyframes underline-grow {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.hover\:underline-animation:hover::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: black; /* Customize the color as needed */
+    animation: underline-grow 1s forwards;
+    position: absolute;
+    bottom: -2px; /* Adjust this value based on your layout */
+    left: 0;
+}
+
+.hover\:underline-animation::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1px;
+    background-color: black; /* Customize the color as needed */
+    position: absolute;
+    bottom: -2px; /* Adjust this value based on your layout */
+    left: 0;
+}
+</style>

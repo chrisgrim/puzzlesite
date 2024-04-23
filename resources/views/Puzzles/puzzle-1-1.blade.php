@@ -9,9 +9,10 @@
 @endsection
 
 
+
 @section('content')
     <main class="min-h-[30rem]">
-        <puzzle-one></puzzle-one>
+        <puzzle-one-one :puzzle="{{ $puzzle }}" :chapter="{{ $chapter }}" :solution="{{ $solution }}" :user="user"></puzzle-one-one>
     </main>
 @endsection
 

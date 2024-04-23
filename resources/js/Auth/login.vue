@@ -1,46 +1,47 @@
 <template>
-    <div class="w-full relative">
-        <div class="bg-white shadow-light flex-col items-center max-h-[90vh] w-[55rem] m-auto">
-            
-            <div class="flex flex-col h-full justify-start p-8 w-full">
-                <div class="login-form">
-			        <div class="field">
-			            <h3 class="mb-8 mt-4">Welcome to Everything Immersive</h3>
-			            <input 
-			                id="email" 
-			                type="email" 
-			                class="bg-white border border-gray-300 rounded-t-lg text-gray-700 font-montserrat text-base md:text-lg px-4 py-5 relative transition duration-200 w-full focus:rounded-t-lg"
-			                v-model="user.email" 
-			                :class="{ 'error': v$.user.email.$error }"
-			                @input="clearServerError('email')"
-			                @keyup.enter="onSubmit"
-			                required
-			                placeholder="email" 
-			                autofocus>
-			        </div>
-			        <div class="field">
-			            <input 
-			                id="password" 
-			                class="bg-white border border-gray-300 rounded-b-lg border-t-0 text-gray-700 font-montserrat text-base md:text-lg px-4 py-5 relative transition duration-200 w-full focus:border-t-0 focus:rounded-b-lg mb-4"
-			                :type="isVisible ? 'text' : 'password'" 
-			                v-model="user.password"
-			                :class="{'error': v$.user.password.$error || !v$.user.email.serverFailed }"
-			                @input="clearServerError('password')"
-			                @keyup.enter="onSubmit"
-			                required
-			                placeholder="password">
-			        </div>
-			        <p v-if="v$.user.email.$dirty && v$.user.email.required.$invalid" class="text-red-500 text-lg">The email is required</p>
-					<p v-if="v$.user.email.$dirty && v$.user.email.email.$invalid" class="text-red-500 text-lg">Must be an email</p>
-		            <p v-if="v$.user.password.$dirty && v$.user.password.required.$invalid" class="text-red-500 text-lg">The password is required.</p>
-					<p v-if="v$.user.password.$dirty && v$.user.password.minLength.$invalid" class="text-red-500 text-lg">The password must be at least 8 characters long.</p>
-		            <div v-if="Object.keys(errors).length > 0">
-					    <div v-for="(errorMessages, fieldName) in errors" :key="fieldName">
-					        <p class="text-red-500 text-xl" v-for="(error, index) in errorMessages" :key="index">{{ error }}</p>
-					    </div>
-					</div>
-			        <div class="field mt-2">
-			            <transition name="fade" mode="out-in">
+    <div class="w-full relative border-stone-400 border-y min-h-screen">
+        <div class="flex-col items-center max-w-screen-lg m-auto border-l border-stone-400 h-full">
+            <div class="max-w-[50rem] py-40 pl-20 h-full">
+            	<div class="flex flex-col h-full justify-start p-8 w-full">
+            		<h2 class="mb-8 mt-4 text-7xl text-stone-500">THE OVERLAP</h2>
+            		<p>Create a new user or login below to enjoy the overlap. </p>
+	                <div class="login-form">
+				        <div class="mt-10">
+				            <input 
+				                id="email" 
+				                type="email" 
+				                class="border-stone-400 border-b"
+				                v-model="user.email" 
+				                :class="{ 'error': v$.user.email.$error }"
+				                @input="clearServerError('email')"
+				                @keyup.enter="onSubmit"
+				                required
+				                placeholder="email" 
+				                autofocus>
+				        </div>
+				        <div class="mt-10">
+				            <input 
+				                id="password" 
+				                class="border-stone-400 border-b"
+				                :type="isVisible ? 'text' : 'password'" 
+				                v-model="user.password"
+				                :class="{'error': v$.user.password.$error || !v$.user.email.serverFailed }"
+				                @input="clearServerError('password')"
+				                @keyup.enter="onSubmit"
+				                required
+				                placeholder="password">
+				        </div>
+				        <p v-if="v$.user.email.$dirty && v$.user.email.required.$invalid" class="text-red-500 text-lg">The email is required</p>
+						<p v-if="v$.user.email.$dirty && v$.user.email.email.$invalid" class="text-red-500 text-lg">Must be an email</p>
+			            <p v-if="v$.user.password.$dirty && v$.user.password.required.$invalid" class="text-red-500 text-lg">The password is required.</p>
+						<p v-if="v$.user.password.$dirty && v$.user.password.minLength.$invalid" class="text-red-500 text-lg">The password must be at least 8 characters long.</p>
+			            <div v-if="Object.keys(errors).length > 0">
+						    <div v-for="(errorMessages, fieldName) in errors" :key="fieldName">
+						        <p class="text-red-500 text-xl" v-for="(error, index) in errorMessages" :key="index">{{ error }}</p>
+						    </div>
+						</div>
+				        <div class="field mt-2">
+				            
 			                <template v-if="true">
 			                    <button 
 			                    	@click="forgotPassword"
@@ -50,9 +51,9 @@
 			                    </button>
 			                </template>
 			                <template v-else>
-			                    <div class="rounded-2xl text-white mb-4 p-4 bg-gradient-to-r from-cyan-500 to-blue-500">
+			                    <div class="">
 			                        <button 
-			                            class="top-1.5 right-1.5 absolute border-white rounded-full z-10 hover:bg-white"
+			                            class=""
 			                            @click="forget=false">
 			                            <svg class="w-8 h-8 fill-white hover:fill-black">
 			                                <use :xlink:href="`/storage/website-files/icons.svg#ri-close-line`" />
@@ -62,24 +63,18 @@
 			                        <p class="text-white">Please check your email.</p>
 			                    </div>
 			                </template>
-			            </transition>
-			        </div>
-			        <div class="field">
-			            <button 
-			                type="submit" 
-			                :disabled="isDisabled" 
-			                class="mb-4 font-medium py-6 px-4 rounded-2xl w-full border-none text-white float-right bg-gradient-to-r from-button-red-1 via-button-red-2 to-button-red-3 md:px-20 hover:from-button-red-2 hover:via-button-red-3 hover:to-button-red-1"
-			                @click="onSubmit">
-			                Continue
-			            </button>
-			        </div>
-			    </div>
-			    <div class="border-t border-gray-300 pt-8 mt-4">
-			    	<a href="/auth/google">
-			    		<button class="border border-black w-full flex items-center justify-center p-6 rounded-2xl mb-8">
-		            		Continue with Google
-		            	</button>
-			    	</a>
+				        </div>
+				        <div class="field">
+				        	<h2 @click="onSubmit" :disabled="isDisabled"  class="mb-8 mt-4 text-6xl cursor-pointer">Enter the story</h2>
+				        </div>
+				    </div>
+				    <!-- <div class="pt-8 mt-4">
+				    	<a href="/auth/google">
+				    		<button class="border border-black w-full flex items-center justify-center p-6 rounded-2xl mb-8">
+			            		Continue with Google
+			            	</button>
+				    	</a>
+		            </div> -->
 	            </div>
             </div>
         </div>
@@ -130,9 +125,9 @@ export default {
             try {
                 const res = await axios.post(`/authenticate`, form.user);
                 console.log(res);
-                // location.reload();
+                // window.location.href = '/';
             } catch (err) {
-            	
+            	console.log(err);
                 if (err.response.data && typeof err.response.data === 'object') {
 		            form.errors = err.response.data.errors;
 		        } else {

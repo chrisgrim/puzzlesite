@@ -68,6 +68,8 @@ class EnsureAuthenticatedController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
+        $user->progress()->create();
+
         $request->session()->regenerate();
 
         return response()->noContent();

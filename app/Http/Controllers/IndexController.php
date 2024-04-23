@@ -6,8 +6,14 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
+
     public function index()
     {
-        return view('index'); // Assuming you have an index.blade.php file in your resources/views directory
+        return view('index');
+    }
+
+    public function profile()
+    {
+        return view('Auth.profile');
     }
 }

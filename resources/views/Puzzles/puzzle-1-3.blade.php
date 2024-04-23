@@ -8,9 +8,10 @@
     @include('Layouts.nav')
 @endsection
 
+
 @section('content')
-    <main class="min-h-screen">
-        <home></home>
+    <main class="min-h-[30rem]">
+        <puzzle-one-three :puzzle="{{ $puzzle }}" :chapter="{{ $chapter }}" :solution="{{ $solution }}" :user="user"></puzzle-one-three>
     </main>
 @endsection
 

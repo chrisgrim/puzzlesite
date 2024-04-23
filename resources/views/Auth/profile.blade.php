@@ -9,8 +9,8 @@
 @endsection
 
 @section('content')
-    <main class="min-h-screen">
-        <home></home>
+    <main class="min-h-[30rem]">
+        <profile></profile>
     </main>
 @endsection
 
@@ -22,4 +22,3 @@
 </footer>
 
 @endsection 
-
