@@ -79,17 +79,14 @@ const props = defineProps({
     solution: Object,
 });
 
-const { solution } = toRefs(props);
-
+let userSolution = ref(props.solution);
 let guess = ref('');
 let message = ref('');
+
 let currentShape = null;
 let offsetX = 0;
 let offsetY = 0;
 
-if (props.solution && props.solution.solved) {
-    guess.value = props.puzzle.solution;
-}
 
 async function submitGuess() {
     if (!guess.value) {
@@ -105,8 +102,9 @@ async function submitGuess() {
         });
 
         const data = response.data;
+        guess = '';
         message.value = data.message;
-        solution.value = data.solution;
+        userSolution.value = data.solution;
 
     } catch (error) {
         message.value = `Error: ${error.response ? error.response.data.message : error.message}`;

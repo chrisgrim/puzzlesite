@@ -5,11 +5,17 @@
         </div>
 
         <div id="Header" class="my-10 mb-40">
-            <h2 class="text-9xl">Morning Coffee</h2>
+            <h2 class="text-9xl"> {{props.puzzle.title}} </h2>
             <div class="flex flex-row mt-14 gap-4">
-                <div class="bg-red-200 w-10 h-10 rounded-full shadow-inner-shadow"></div>
-                <div class="bg-red-200 w-10 h-10 rounded-full shadow-inner-shadow"></div>
-                <div class="bg-white w-10 h-10 rounded-full shadow-inner-shadow"></div>
+                <div v-if="props.puzzle.difficulty > 0" 
+                     v-for="index in props.puzzle.difficulty"
+                     :key="index"
+                     class="bg-red-500 w-10 h-10 rounded-full shadow-inner-shadow"
+                ></div>
+                <div v-for="index in 3 - props.puzzle.difficulty" 
+                     :key="index"
+                     class="bg-white w-10 h-10 rounded-full shadow-inner-shadow"
+                ></div>
             </div>
             <p class="mt-14">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -40,16 +46,29 @@
             </div>
         </div>
 
-        <div id="Solution" class="mt-40 p-8">
-            <div class="border-r border">
-                <div>
-                    <p>What did ALbert get</p>
-                </div>
-                <div class="flex flex-row">
-                    <input type="text" name="Solutin" class="mt-12 bg-white"><button>Guess</button>
+        
+        <div class="relative h-[30rem]">
+            <div class="border border-black absolute bg-stone-200 top-0 bottom-0 left-0 right-0">
+                <div class="h-full bg-stone-200 flex flex-col justify-center p-4">
+                    <p>What was the real meaning hidden?</p>
+                    <div class="flex flex-row mt-4">
+                        <input @input="clear" v-model="guess" type="text" name="Solution" class="bg-white rounded-md px-4 py-2 mr-2">
+                        <button @click="submitGuess" class="bg-blue-500 text-white px-4 py-2 rounded-md">Guess</button>
+                        <p v-if="message">{{ message }}</p>
+                    </div>
+                    <div v-if="userSolution && userSolution.guesses.length">
+                        <p>Previous Guesses:</p>
+                        <ul>
+                            <!-- Reverse the order of guesses array and loop through -->
+                            <li v-for="(g, index) in userSolution.guesses.slice().reverse()" :key="index">
+                                {{ g }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -63,6 +82,46 @@ const words = ref([
     { id: 9, word: 'Island' }, { id: 10, word: 'Juice' }, { id: 11, word: 'Kite' }, { id: 12, word: 'Lion' },
     { id: 13, word: 'Moon' }, { id: 14, word: 'Notebook' }, { id: 15, word: 'Orange' }, { id: 16, word: 'Piano' }
 ]);
+
+const props = defineProps({
+    user: Object,
+    puzzle: Object,
+    chapter: Object,
+    solution: Object,
+});
+
+let guess = ref('');
+let message = ref('');
+let userSolution = ref(props.solution);
+
+
+async function submitGuess() {
+    if (!guess.value) {
+        message.value = 'Please enter a guess.';
+        return;
+    }
+
+    message.value = 'Submitting...';
+    
+    try {
+        const response = await axios.post(`/api/puzzles/${props.chapter.id}/${props.puzzle.order}/guess`, {
+            guess: guess.value
+        });
+
+        const data = response.data;
+        guess = '';
+        message.value = data.message;
+        userSolution.value = data.solution;
+
+    } catch (error) {
+        message.value = `Error: ${error.response ? error.response.data.message : error.message}`;
+    }
+}
+
+function clear() {
+    message.value = ''
+}
+
 
 // State to track selected word ids
 const selectedWords = ref([]);

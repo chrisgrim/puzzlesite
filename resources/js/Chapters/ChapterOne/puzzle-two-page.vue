@@ -94,9 +94,6 @@ let guess = ref('');
 let message = ref('');
 let userSolution = ref(props.solution);
 
-if (props.solution && props.solution.solved) {
-    guess.value = props.puzzle.solution;
-}
 
 async function submitGuess() {
     if (!guess.value) {
@@ -112,6 +109,7 @@ async function submitGuess() {
         });
 
         const data = response.data;
+        guess = '';
         message.value = data.message;
         userSolution.value = data.solution;
 

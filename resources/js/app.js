@@ -48,19 +48,19 @@ app.component('nav-bar', NavBar);
 app.component('side-bar', SideBar);
 app.component('home', Home);
 
-app.component('chapter-one', ChapterOne);
-app.component('puzzle-one-one', PuzzleOneOne);
-app.component('puzzle-one-two', PuzzleOneTwo);
-app.component('puzzle-one-three', PuzzleOneThree);
-app.component('puzzle-one-four', PuzzleOneFour);
-app.component('puzzle-one-five', PuzzleOneFive);
+app.component('chapter-1', ChapterOne);
+app.component('puzzle-1-1', PuzzleOneOne);
+app.component('puzzle-1-2', PuzzleOneTwo);
+app.component('puzzle-1-3', PuzzleOneThree);
+app.component('puzzle-1-4', PuzzleOneFour);
+app.component('puzzle-1-5', PuzzleOneFive);
 
-app.component('chapter-two', ChapterTwo);
-app.component('puzzle-two-one', PuzzleTwoOne);
-app.component('puzzle-two-two', PuzzleTwoTwo);
-app.component('puzzle-two-three', PuzzleTwoThree);
-app.component('puzzle-two-four', PuzzleTwoFour);
-app.component('puzzle-two-five', PuzzleTwoFive);
+app.component('chapter-2', ChapterTwo);
+app.component('puzzle-2-1', PuzzleTwoOne);
+app.component('puzzle-2-2', PuzzleTwoTwo);
+app.component('puzzle-2-3', PuzzleTwoThree);
+app.component('puzzle-2-4', PuzzleTwoFour);
+app.component('puzzle-2-5', PuzzleTwoFive);
 
 app.component('login', Login);
 app.component('profile', Profile);

@@ -12,7 +12,7 @@
 
 @section('content')
     <main class="min-h-[30rem]">
-        <puzzle-one-one :puzzle="{{ $puzzle }}" :chapter="{{ $chapter }}" :solution="{{ $solution }}" :user="user"></puzzle-one-one>
+        <puzzle-1-1 :puzzle="{{ $puzzle }}" :chapter="{{ $chapter }}" :solution="{{ $solution }}" :user="user"></puzzle-1-1>
     </main>
 @endsection
 

@@ -10,11 +10,14 @@
 
 @section('content')
     <main class="min-h-screen">
-        <side-bar></side-bar>
-        <chapter-one></chapter-one>
-        <chapter-two></chapter-two>
+        <side-bar :chapters="{{ json_encode($chapters) }}"></side-bar>
+
+        @foreach ($chapters as $chapter)
+            <component :is="'chapter-' + {{ $chapter->id }}" :chapter="{{ json_encode($chapter) }}"></component>
+        @endforeach
     </main>
 @endsection
+
 
 @section('footer')
 

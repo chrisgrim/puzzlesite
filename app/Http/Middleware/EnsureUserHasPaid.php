@@ -6,14 +6,13 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectIfPaid
+class EnsureUserHasPaid
 {
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && auth()->user()->has_paid) {
-            return redirect('/'); 
+            return $next($request);
         }
-
-        return $next($request);
+        return redirect('/checkout'); 
     }
 }

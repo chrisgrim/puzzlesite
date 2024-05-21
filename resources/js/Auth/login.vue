@@ -125,7 +125,7 @@ export default {
             try {
                 const res = await axios.post(`/authenticate`, form.user);
                 console.log(res);
-                // window.location.href = '/';
+                window.location.href = '/';
             } catch (err) {
             	console.log(err);
                 if (err.response.data && typeof err.response.data === 'object') {

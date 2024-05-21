@@ -3,7 +3,7 @@
         <div class="w-4/6 mt-40">
             <div class="w-60 border-b bg-black h-1"></div>
             <div class="my-10 mb-40">
-                <h2 class="text-9xl">Chapter 2.</h2>
+                <h2 class="text-9xl">Chapter {{ chapter.id }}.</h2>
             </div>
             <div class="typewriter text-lg">
                 <p>Today, however, Author's attention was half on the puzzle and half on the morning news flickering on the small TV across his modest kitchen. The broadcast was troubling, centering not on routine city affairs but on a sudden and mysterious proliferation of graffiti that had appeared overnight across the city's walls. Intricate, cryptic sentences and symbols had been spray-painted in vibrant colors, turning the city into a canvas of unsolicited art. The contrast between the orderly black and white grid of his crossword and the colorful disarray of the world outside formed a dissonant backdrop to his morning.</p>
@@ -13,24 +13,21 @@
                 {{ displayText }}
                 <span class="cursor">|</span>
             </div>
-            <div class="relative min-h-40">
-              <div class="flex flex-col absolute w-full">
-                <div class="bg-stone-300 p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                    <a class="h-full flex items-center uppercase ml-[30rem]" href="/puzzles/1"><span class="text-5xl mr-10">01.</span><span class="font-source text-lg">Shaping Up</span></a>
+            
+            <div v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="relative min-h-28">
+                <div class="flex absolute w-full">
+                    <div :class="puzzle.is_accessible ? 'bg-stone-300' : 'bg-gray-300'" class="p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
+                        <a v-if="puzzle.is_accessible" class="h-full flex items-center uppercase ml-[30rem]" :href="'/puzzles/' + chapter.id + '/' + puzzle.order">
+                            <span class="text-5xl mr-10">{{ puzzle.order < 10 ? '0' + puzzle.order : puzzle.order }}.</span>
+                            <span class="font-source text-lg">{{ puzzle.title }}</span>
+                        </a>
+                        <div v-else class="h-full flex items-center uppercase ml-[30rem]">
+                            <span class="text-5xl mr-10">{{ puzzle.order < 10 ? '0' + puzzle.order : puzzle.order }}.</span>
+                            <span class="font-source text-lg">{{ puzzle.title }}</span>
+                            <span class="text-red-500 ml-4">(Locked)</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-stone-300 p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                    <a class="h-full flex items-center uppercase ml-[30rem]" href="/puzzles/2"><span class="text-5xl mr-10">01.</span><span class="font-source text-lg">Puzzle Two</span></a>
-                </div>
-                <div class="bg-stone-300 p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                    <a class="h-full flex items-center uppercase ml-[30rem]" href="/puzzles/3"><span class="text-5xl mr-10">01.</span><span class="font-source text-lg">Puzzle Three</span></a>
-                </div>
-                <div class="bg-stone-300 p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                    <a class="h-full flex items-center uppercase ml-[30rem]" href="/puzzles/4"><span class="text-5xl mr-10">01.</span><span class="font-source text-lg">Puzzle Four</span></a>
-                </div>
-                <div class="bg-stone-300 p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                    <a class="h-full flex items-center uppercase ml-[30rem]" href="/puzzles/5"><span class="text-5xl mr-10">01.</span><span class="font-source text-lg">Puzzle Five</span></a>
-                </div>
-              </div>
             </div>
         </div>
     </div>
@@ -38,24 +35,16 @@
 
 <script>
 export default {
-    data() {
-        return {
-            message: "",
-            displayText: "",
-            index: 0,
-        };
-    },
-    mounted() {
-        this.typeWriter();
-    },
-    methods: {
-        typeWriter() {
-            if (this.index < this.message.length) {
-                this.displayText += this.message.charAt(this.index);
-                this.index++;
-                setTimeout(this.typeWriter, 15); // Adjust for typing speed
-            }
+    props: {
+        chapter: {
+            type: Object,
+            required: true,
         },
+    },
+    setup(props) {
+        return {
+            chapter: props.chapter,
+        };
     },
 };
 </script>

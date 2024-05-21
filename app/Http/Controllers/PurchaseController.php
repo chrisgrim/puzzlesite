@@ -69,7 +69,8 @@ class PurchaseController extends Controller
         } catch (ApiErrorException $e) {
             return response()->json([
                 'errors' => [
-                    'payment' => ['Payment processing failed. Please try again.'],
+                    'payment' => [$e->getError()->message],
+                    // 'payment' => ['Payment processing failed. Please try again.'],
                 ]
             ], 422);
         }
