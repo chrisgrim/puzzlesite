@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Puzzle;
 use App\Models\Chapter;
 use App\Http\Middleware\EnsureUserHasPaid;
+use App\Http\Middleware\CustomEnsureEmailIsVerified;
 
 
 class PuzzleController extends Controller
@@ -14,7 +15,7 @@ class PuzzleController extends Controller
 
 	public function __construct()
 	{
-	    $this->middleware(EnsureUserHasPaid::class);
+		$this->middleware(['auth', CustomEnsureEmailIsVerified::class, EnsureUserHasPaid::class]);
 	}
 
 	public function index()

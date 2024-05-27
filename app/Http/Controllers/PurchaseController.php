@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Mail\PurchaseConfirmation;
+use Illuminate\Support\Facades\Mail;
 use Stripe\StripeClient;
 use Stripe\Exception\ApiErrorException;
 
@@ -61,6 +63,9 @@ class PurchaseController extends Controller
             ]);
 
             $user->update(['has_paid' => true]);
+
+            // Send purchase confirmation email
+            Mail::to($user->email)->send(new PurchaseConfirmation($order));
 
             // Handle post-payment logic, such as updating the order status
 

@@ -4,7 +4,7 @@
             <div class="max-w-[50rem] py-40 pl-20 h-full">
             	<div class="flex flex-col h-full justify-start p-8 w-full">
             		<h2 class="mb-8 mt-4 text-7xl text-stone-500">THE OVERLAP</h2>
-            		<p>Create a new user or login below to enjoy the overlap. </p>
+            		<p>Login or Create a new user to enjoy the overlap. </p>
 	                <div class="login-form">
 				        <div class="mt-10">
 				            <input 

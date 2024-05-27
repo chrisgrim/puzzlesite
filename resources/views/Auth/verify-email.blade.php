@@ -10,7 +10,7 @@
 
 @section('content')
     <main class="min-h-[30rem]">
-        <reset-password/>
+        <email-verify></email-verify>
     </main>
 @endsection
 

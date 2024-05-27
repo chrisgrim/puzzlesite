@@ -27,6 +27,7 @@ const Login = defineAsyncComponent(() => import('./Auth/login.vue'));
 const Profile = defineAsyncComponent(() => import('./Auth/profile.vue'));
 const Purchase = defineAsyncComponent(() => import('./Auth/purchase.vue'));
 const ResetPassword = defineAsyncComponent(() => import('./Auth/reset-password.vue'));
+const EmailVerify = defineAsyncComponent(() => import('./Auth/email-verify.vue'));
 
 
 
@@ -65,7 +66,8 @@ app.component('puzzle-2-5', PuzzleTwoFive);
 app.component('login', Login);
 app.component('profile', Profile);
 app.component('purchase', Purchase);
-app.component('vue-reset-password', ResetPassword);
+app.component('reset-password', ResetPassword);
+app.component('email-verify', EmailVerify);
 
 
 

@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\EnsureAuthenticatedController;
+use App\Http\Middleware\RedirectIfVerifiedEmail;
+use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,12 @@ Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
                 ->middleware(['auth', 'throttle:6,1'])
                 ->name('verification.send');
+
+Route::get('/email/verify', function () { return view('auth.verify-email');})
+                ->middleware(['auth', RedirectIfVerifiedEmail::class])->name('verification.notice'); 
+
+Route::post('/email/verification-notification', function (Request $request) { $request->user()->sendEmailVerificationNotification(); return back()->with('message', 'Verification link sent!'); })
+            ->middleware(['auth', 'throttle:6,1'])->name('verification.send');
                 
 Route::get('/password-reset/{token}', function () { return view('auth.reset-password'); })
                 ->middleware('guest')
@@ -50,3 +58,5 @@ Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])
                 ->name('auth.google');
 
 Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
+
+
