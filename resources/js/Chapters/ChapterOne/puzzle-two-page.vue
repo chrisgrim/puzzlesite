@@ -1,32 +1,7 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
 
-        <div class="flex items-center mb-20">
-            <a href="/" class="uppercase">< Back to story</a>
-        </div>
-
-        <div id="Header" class="my-10 mb-40">
-            <h2 class="text-9xl"> {{props.puzzle.title}} </h2>
-            <div class="flex flex-row mt-14 gap-4">
-                <div v-if="props.puzzle.difficulty > 0" 
-                     v-for="index in props.puzzle.difficulty"
-                     :key="index"
-                     class="bg-red-500 w-10 h-10 rounded-full shadow-inner-shadow"
-                ></div>
-                <div v-for="index in 3 - props.puzzle.difficulty" 
-                     :key="index"
-                     class="bg-white w-10 h-10 rounded-full shadow-inner-shadow"
-                ></div>
-            </div>
-            <div class="mt-14">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
-        </div>
+        <Header :puzzle="props.puzzle" />
 
         <div class="my-40">
             <div class="relative mx-auto touch-none place-content-center w-full grid">
@@ -53,35 +28,19 @@
             </div>
         </div>
 
-
-        <div class="relative h-[30rem]">
-            <div class="border border-black absolute bg-stone-200 top-0 bottom-0 left-0 right-0">
-                <div class="h-full bg-stone-200 flex flex-col justify-center p-4">
-                    <p>What was hidden in the shapes?</p>
-                    <div class="flex flex-row mt-4">
-                        <input @input="clear" v-model="guess" type="text" name="Solution" class="bg-white rounded-md px-4 py-2 mr-2">
-                        <button @click="submitGuess" class="bg-blue-500 text-white px-4 py-2 rounded-md">Guess</button>
-                        <p v-if="message">{{ message }}</p>
-                    </div>
-                    <div v-if="userSolution && userSolution.guesses.length">
-                        <p>Previous Guesses:</p>
-                        <ul>
-                            <!-- Reverse the order of guesses array and loop through -->
-                            <li v-for="(g, index) in userSolution.guesses.slice().reverse()" :key="index">
-                                {{ g }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
+        <SubmissionSection 
+            :question="'What was hidden in the shapes?'"
+            :solution="props.solution" 
+            :chapter-id="props.chapter.id"
+            :puzzle-order="props.puzzle.order"
+        />
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, toRefs} from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, toRefs } from 'vue';
+import Header from '@/Global/header.vue';
+import SubmissionSection from '@/Global/submissionSection.vue';
 
 const props = defineProps({
     user: Object,
@@ -90,37 +49,9 @@ const props = defineProps({
     solution: Object,
 });
 
-let guess = ref('');
-let message = ref('');
-let userSolution = ref(props.solution);
-
-
-async function submitGuess() {
-    if (!guess.value) {
-        message.value = 'Please enter a guess.';
-        return;
-    }
-
-    message.value = 'Submitting...';
-    
-    try {
-        const response = await axios.post(`/api/puzzles/${props.chapter.id}/${props.puzzle.order}/guess`, {
-            guess: guess.value
-        });
-
-        const data = response.data;
-        guess = '';
-        message.value = data.message;
-        userSolution.value = data.solution;
-
-    } catch (error) {
-        message.value = `Error: ${error.response ? error.response.data.message : error.message}`;
-    }
-}
-
-function clear() {
-    message.value = ''
-}
+let currentShape = null;
+let offsetX = 0;
+let offsetY = 0;
 
 const puzzleLayout = [
     'X', 'E', 'C', 'H', 'R', 'F',
@@ -133,7 +64,6 @@ const puzzleLayout = [
     'Q', 'R', 'S', 'T', 'U', 'V'
 ];
 
-
 const letters = puzzleLayout.map((letter, index) => ({
     id: index + 1,
     letter
@@ -144,19 +74,15 @@ const selectedLetters = ref([]);
 const selectedIndices = ref([]);
 const selectedIds = ref([]);
 const svgElement = ref(null);
-const svgStrokeColor = '#3B82F6'; 
+const svgStrokeColor = '#3B82F6';
 const lastSelectedId = ref(null);
 const correctSelections = ref(new Set());
 const correctAnswerPaths = ref([]); // Stores positions of correctly answered letters
 
-
 const getClass = (id) => {
     return {
-        // 'ring-gap' added for the gap effect around selected letters, including the last selected one
         'bg-blue-500 text-white': selectedIds.value.includes(id),
-        // Special style for the last selected letter
         'ring-gap !border-2 border-blue-500': id === lastSelectedId.value,
-        // Apply green background for correct selections
         'cursor-default bg-green-500': correctSelections.value.has(id),
     };
 };
@@ -177,8 +103,6 @@ const updatePositions = () => {
     const newPositions = calculateNewPositions();
     selectedIndices.value = newPositions;
 };
-
-
 
 const isAdjacent = (currentId, lastId) => {
     const currentRow = Math.floor((currentId - 1) / 6);
@@ -257,7 +181,6 @@ const checkForSubmission = () => {
 };
 
 const updateSvgPosition = (letterObj, event) => {
-    // Add the SVG position updating logic here
     if (svgElement.value) {
         const { left, top, width, height } = event.target.getBoundingClientRect();
         const { left: svgLeft, top: svgTop } = svgElement.value.getBoundingClientRect();
@@ -266,7 +189,6 @@ const updateSvgPosition = (letterObj, event) => {
     updatePositions();
 };
 
-// Remember to update the resetSelections method to reset lastSelectedId as well
 const resetSelections = () => {
     selectedLetters.value = [];
     selectedIndices.value = [];
@@ -277,7 +199,6 @@ const resetSelections = () => {
 const svgPath = computed(() => {
     return selectedIndices.value.reduce((acc, curr, index) => `${acc} ${index === 0 ? 'M' : 'L'} ${curr.x},${curr.y}`, '').trim();
 });
-
 
 onMounted(() => {
     window.addEventListener('resize', updatePositions);
@@ -295,4 +216,3 @@ onUnmounted(() => {
     border: 2px solid white !important;
 }
 </style>
-

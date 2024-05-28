@@ -75,20 +75,18 @@ import { ref, toRefs } from 'vue';
 const props = defineProps({
     user: Object,
     puzzle: Object,
+    chapter:Object,
     solution: Object,
 });
 
-const { solution } = toRefs(props);
-
+let userSolution = ref(props.solution);
 let guess = ref('');
 let message = ref('');
+
 let currentShape = null;
 let offsetX = 0;
 let offsetY = 0;
 
-if (props.solution && props.solution.solved) {
-    guess.value = props.puzzle.solution;
-}
 
 async function submitGuess() {
     if (!guess.value) {
@@ -99,13 +97,14 @@ async function submitGuess() {
     message.value = 'Submitting...';
     
     try {
-        const response = await axios.post(`/api/puzzles/${props.puzzle.id}/guess`, {
+        const response = await axios.post(`/api/puzzles/${props.chapter.id}/${props.puzzle.order}/guess`, {
             guess: guess.value
         });
 
         const data = response.data;
+        guess = '';
         message.value = data.message;
-        solution.value = data.solution;
+        userSolution.value = data.solution;
 
     } catch (error) {
         message.value = `Error: ${error.response ? error.response.data.message : error.message}`;

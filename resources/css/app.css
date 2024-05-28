@@ -49,13 +49,17 @@
     color: #000; /* Replace with your $font-color value */
   }
   p {
-    font-size: 1.6rem; /* 16px */
+    font-size: 1.8rem; /* 16px */
     line-height: 2rem; /* 20px */
-    font-family: "Source Serif 4", serif;
+/*    font-family: "Source Serif 4", serif;*/
+    font-family: "Cutive Mono", monospace;
     margin: 0;
     margin-top:1rem;
-    color: rgb(87 83 78); /* Replace with your $font-color value */
+    color: #262626; /* Replace with your $font-color value */
     margin-left: 1px;
+    letter-spacing: -.1rem;
+    word-spacing: -.5rem;
+    font-weight: 500;
   }
   h1 {
     font-size: 4.6rem; /* 46px */

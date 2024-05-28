@@ -51,7 +51,7 @@ class PuzzleController extends Controller
 	        return redirect()->back();
 	    }
 	    
-	    return view("Puzzles.puzzle-{$chapter->id}-{$puzzle->order}", [
+	    return view("Puzzles.Chapter{$chapter->id}.puzzle{$puzzle->order}", [
             'puzzle' => $puzzle,
             'chapter' => $chapter,
             'solution' => $solution,
@@ -104,14 +104,10 @@ class PuzzleController extends Controller
 	{
 	    $progress = $user->progress()->first();
 
-
-	    // Only update progress if the solved puzzle is the next one in sequence
-	    if ($chapter->id > $progress->chapter_id || 
-	        ($chapter->id == $progress->chapter_id && $puzzle->order > $progress->puzzle_order)) {
-	        $progress->chapter_id = $chapter->id;
-	        $progress->puzzle_order = $puzzle->order;
-	        $progress->save();
-	    }
+        $progress->chapter_id = $chapter->id;
+        $progress->puzzle_order = $puzzle->order;
+        $progress->save();
+	    
 	}
 
 	protected function userCanAccessPuzzle($user, $chapter, $puzzle)

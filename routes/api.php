@@ -8,4 +8,4 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::POST('/puzzles/{chapter}/{puzzle}/guess', [PuzzleController::class, 'guess'])->middleware('auth:sanctum');
+Route::POST('/puzzles/{chapter}/{order}/guess', [PuzzleController::class, 'guess'])->middleware('auth:sanctum');
