@@ -5,8 +5,26 @@
         <Header :puzzle="props.puzzle" />
 
         <!-- Puzzle Section -->
-        <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
-            <div class="relative mx-auto touch-none place-content-center w-full grid">
+        <div id="puzzle" class="puzzle flex flex-row items-center justify-center py-16">
+            <div class="w-1/2">
+                <div class="w-full border border-black rounded-3xl overflow-hidden flex flex-col">
+                    <div class="bg-gray-700 text-white text-center p-2">Union Daily</div>
+                    <div class="mt-4 flex flex-col p-4">
+                        Correct Answer:
+                        <div v-for="(answer, index) in correctAnswersList" :key="index">
+                            {{ answer }}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <p class="m-0">July 8, 2024</p>
+                    <p class="text-bold m-0"><b>By .... . .-.. .-..</b></p>
+                </div>
+            </div>
+
+
+            <div class="relative mx-auto touch-none place-content-center w-1/2 grid">
+                <p class="text-center h-10 mb-8">{{ selectedLetters.join('') }}</p>
                 <svg ref="svgElement" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                     <!-- Paths for Correct Answers -->
                     <path v-for="(path, index) in correctAnswerPaths" :key="'correct-path-' + index"
@@ -22,15 +40,12 @@
                      @mouseup="endDrag"
                      @mouseleave="endDrag">
                     <div v-for="letterObj in letters" :key="letterObj.id" :data-id="letterObj.id"
-                         class="w-14 h-14 flex justify-center items-center cursor-pointer select-none rounded-full text-4xl border-0"
+                         class="w-16 h-16 flex justify-center items-center cursor-pointer select-none rounded-full text-4xl border-0"
                          :class="getClass(letterObj.id)"
                          @click="selectLetter(letterObj, $event)">
                         {{ letterObj.letter }}
                     </div>
                 </div>
-            </div>
-            <div class="mt-4">
-                Selected Letters: {{ selectedLetters.join('') }}
             </div>
         </div>
 
@@ -43,6 +58,7 @@
         />
     </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
@@ -61,22 +77,24 @@ let offsetX = 0;
 let offsetY = 0;
 
 const puzzleLayout = [
-    'X', 'E', 'C', 'H', 'R', 'F',
-    'A', 'M', 'Y', 'S', 'I', 'L',
-    'L', 'P', 'C', 'P', 'Q', 'R',
-    'E', 'L', 'U', 'V', 'W', 'X',
-    'Y', 'G', 'L', 'B', 'C', 'D',
-    'U', 'Y', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O', 'P',
-    'Q', 'R', 'S', 'T', 'U', 'V'
+    'A*', 'U*', 'N', 'I*', 'E*', 'E*',
+    'N', 'L', 'V*', 'G', 'R*', 'N',
+    'E', 'P', 'E', 'R*', 'Y*', 'I',
+    'I*', 'N*', 'E*', 'S', 'D*', 'M*',
+    'F', 'O', 'A', 'M*', 'S*', 'E*',
+    'L', 'D*', 'O', 'I*', 'N', 'S*',
+    'S', 'I*', 'N*', 'D*', 'O*', 'P',
+    'A*', 'G*', 'O', 'E*', 'V', 'A*',
+    'E', 'O*', 'R*', 'S', 'R*', 'L'
 ];
 
-const letters = puzzleLayout.map((letter, index) => ({
+const letters = puzzleLayout.map((entry, index) => ({
     id: index + 1,
-    letter
+    letter: entry.replace('*', ''),
+    color: entry.includes('*') ? 'black' : 'white'
 }));
 
-const correctAnswers = ['EXAMPLE', 'LUCY', 'CHRIS', 'UGLY'];
+const correctAnswers = ['AEGIS', 'UNIVERSE', 'OVERLAPS', 'MANIFOLD', 'DOORS', 'ENERGY', 'PLANE', 'DIMENSION'];
 const selectedLetters = ref([]);
 const selectedIndices = ref([]);
 const selectedIds = ref([]);
@@ -89,12 +107,21 @@ let isDragging = ref(false);
 let dragStartElement = null;
 let initialMouseDown = false;
 let draggedLetters = ref([]);
+const correctAnswersList = ref([]);
 
 const getClass = (id) => {
+    const letterObj = letters.find(letter => letter.id === id);
+    const isSelected = selectedIds.value.includes(id);
+    const isLastSelected = id === lastSelectedId.value;
+    const isCorrect = correctSelections.value.has(id);
+    const isDot = letterObj.color === 'black';
+    const isGap = letterObj.color === 'white';
+
     return {
-        'bg-blue-500 text-white': selectedIds.value.includes(id),
-        'ring-gap !border-2 border-blue-500': id === lastSelectedId.value,
-        'cursor-default bg-green-500': correctSelections.value.has(id),
+        'bg-blue-500 text-white': isSelected,
+        'ring-gap !border-2 border-blue-500': isLastSelected,
+        'cursor-default bg-green-500': isCorrect && isGap,
+        'cursor-default bg-black text-white': isCorrect && isDot,
     };
 };
 
@@ -266,7 +293,6 @@ const isAdjacent = (currentId, lastId) => {
 };
 
 
-
 const checkForSubmission = (type) => {
     let selectedString;
     if (type === 'drag') {
@@ -286,13 +312,13 @@ const checkForSubmission = (type) => {
         correctAnswerPaths.value.push({ d: pathData, color: '#10B981' }); // Use green color for correct paths
 
         console.log('Correct answer:', selectedString);
+        correctAnswersList.value.push(selectedString); // Add to correct answers list
         resetSelections();
     } else {
         console.log('Incorrect answer:', selectedString);
         resetSelections();
     }
 };
-
 
 const resetSelections = () => {
     selectedLetters.value = [];

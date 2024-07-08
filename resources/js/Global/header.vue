@@ -3,7 +3,7 @@
         <a class="uppercase text-md" href="/">Chapter 1</a>
     </div>
 
-    <div id="Header" class="mb-40">
+    <div id="Header">
         <h2 class="text-9xl mb-20"> {{props.puzzle.title}} </h2>
         <div class="bg-black h-[.11rem] w-[10rem] mt-10"></div>
         <DifficultyIndicator :difficulty="props.puzzle.difficulty" />
