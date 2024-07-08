@@ -1,9 +1,11 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
 
+        <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
 
-        <div id="Puzzle" class="max-w-[50rem] m-auto">
+        <!-- Puzzle Section -->
+        <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
             <div class="grid grid-cols-4 gap-4">
                 <div v-for="wordObj in words" :key="wordObj.id" 
                     :class="getClass(wordObj.id)"

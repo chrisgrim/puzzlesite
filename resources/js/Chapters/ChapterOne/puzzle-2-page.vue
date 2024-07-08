@@ -1,9 +1,11 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
 
+        <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
 
-        <div class="my-40">
+        <!-- Puzzle Section -->
+        <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
             <div class="relative mx-auto touch-none place-content-center w-full grid">
                 <svg ref="svgElement" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                     <!-- Paths for Correct Answers -->

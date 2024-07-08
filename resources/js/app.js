@@ -9,18 +9,18 @@ const SideBar = defineAsyncComponent(() => import('./Layouts/Nav/side-bar.vue'))
 const Home = defineAsyncComponent(() => import('./Layouts/home.vue'));
 
 const ChapterOne = defineAsyncComponent(() => import('./Chapters/chapter-one-page.vue'));
-const PuzzleOneOne = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-one-page.vue'));
-const PuzzleOneTwo = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-two-page.vue'));
-const PuzzleOneThree = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-three-page.vue'));
-const PuzzleOneFour = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-four-page.vue'));
-const PuzzleOneFive = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-five-page.vue'));
+const PuzzleOneOne = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-1-page.vue'));
+const PuzzleOneTwo = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-2-page.vue'));
+const PuzzleOneThree = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-3-page.vue'));
+const PuzzleOneFour = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-4-page.vue'));
+const PuzzleOneFive = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-5-page.vue'));
 
 const ChapterTwo = defineAsyncComponent(() => import('./Chapters/chapter-two-page.vue'));
-const PuzzleTwoOne = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-one-page.vue'));
-const PuzzleTwoTwo = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-two-page.vue'));
-const PuzzleTwoThree = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-three-page.vue'));
-const PuzzleTwoFour = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-four-page.vue'));
-const PuzzleTwoFive = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-five-page.vue'));
+const PuzzleTwoOne = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-1-page.vue'));
+const PuzzleTwoTwo = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-2-page.vue'));
+const PuzzleTwoThree = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-3-page.vue'));
+const PuzzleTwoFour = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-4-page.vue'));
+const PuzzleTwoFive = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-5-page.vue'));
 
 
 const Login = defineAsyncComponent(() => import('./Auth/login.vue'));

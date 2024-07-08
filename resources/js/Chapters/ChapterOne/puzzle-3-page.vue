@@ -1,27 +1,31 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
         
+        <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
 
-        <div class="game-container flex flex-col items-center mt-5" @mouseup="stopRotation">
-            <div class="grid grid-cols-6 gap-0.5">
-                <div v-for="(row, rowIndex) in grid" :key="rowIndex" class="grid-row">
-                    <div
-                        v-for="(cell, cellIndex) in row"
-                        :key="cellIndex"
-                        class="grid-cell relative"
-                        :class="{
-                            'w-12 h-12 flex items-center justify-center': true,
-                            'bg-brown-600': cell.isPath,
-                            'bg-blue-500': cell.isUser,
-                            'bg-yellow-400': cell.isStar
-                        }"
-                        @mousedown="startRotation"
-                    >
+        <!-- Puzzle Section -->
+        <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
+            <div class="game-container flex flex-col items-center mt-5" @mouseup="stopRotation">
+                <div class="grid grid-cols-6 gap-0.5">
+                    <div v-for="(row, rowIndex) in grid" :key="rowIndex" class="grid-row">
                         <div
-                            class="dot absolute bg-black rounded-full w-1 h-1"
-                            :style="{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }"
-                        ></div>
+                            v-for="(cell, cellIndex) in row"
+                            :key="cellIndex"
+                            class="grid-cell relative"
+                            :class="{
+                                'w-12 h-12 flex items-center justify-center': true,
+                                'bg-brown-600': cell.isPath,
+                                'bg-blue-500': cell.isUser,
+                                'bg-yellow-400': cell.isStar
+                            }"
+                            @mousedown="startRotation"
+                        >
+                            <div
+                                class="dot absolute bg-black rounded-full w-1 h-1"
+                                :style="{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }"
+                            ></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,11 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
+
+        <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
 
-        <div class="puzzle flex flex-col items-center justify-center">
+        <!-- Puzzle Section -->
+        <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
             <div class="relative w-full max-w-4xl h-96 mx-auto">
                 <div
                     v-for="(shape, index) in shapes"
@@ -24,6 +27,7 @@
             </div>
         </div>
 
+        <!-- Submission Section -->
         <SubmissionSection 
             :question="'What was hidden in the shapes?'"
             :solution="props.solution" 
