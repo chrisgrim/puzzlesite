@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { defineProps } from 'vue';
 import axios from 'axios';
 
@@ -47,26 +47,29 @@ const props = defineProps({
 
 let guess = ref('');
 let message = ref('');
-let solution = ref(props.solution);
+let solution = ref(props.solution ? { ...props.solution } : { guesses: [] });
+
+// Watch for changes in props.solution
+watch(() => props.solution, (newSolution) => {
+    solution.value = newSolution ? { ...newSolution } : { guesses: [] };
+}, { immediate: true });
 
 async function submitGuess() {
     if (!guess.value) {
         message.value = 'Please enter a guess.';
         return;
     }
-
     message.value = 'Submitting...';
-
     try {
         const response = await axios.post(`/api/puzzles/${props.chapterId}/${props.puzzleOrder}/guess`, {
             guess: guess.value
         });
-
         const data = response.data;
         guess.value = '';
         message.value = data.message;
-        solution.value.guesses = data.solution.guesses;
-
+        if (data.solution) {
+            solution.value = { ...solution.value, ...data.solution };
+        }
     } catch (error) {
         message.value = `Error: ${error.response ? error.response.data.message : error.message}`;
     }

@@ -1,14 +1,13 @@
 <template>
-    <div class="w-[30rem] h-screen fixed right-20 mt-40 z-50">
-        <div class="relative h-full">
-            <div class="absolute left-0 top-0 h-1/2 w-px bg-black"></div>
-            <div class="w-full p-4 flex flex-col">
-                <ul>
-                    <li v-for="chapter in chapters" :key="chapter.id">
-                        <div class="font-bold">Chapter {{ chapter.id }}: {{ chapter.title }}</div>
+    <div class="w-[32rem] h-screen fixed left z-50 pl-32">
+        <div class="relative h-full border-l border-stone-400">
+            <div class="w-full flex flex-col">
+                <ul class="m-0 mt-40">
+                    <li class="border-t border-stone-400 p-2" v-for="chapter in chapters" :key="chapter.id">
+                        <h2 class="text-md uppercase font-bold">Chapter {{ chapter.id }}: {{ chapter.title }}</h2>
                         <ul class="ml-4">
 					        <li v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="mt-2">
-					            <div :class="puzzle.is_accessible ? 'text-black' : 'text-gray-500'" class="flex justify-between items-center">
+					            <div v-if="puzzle.is_accessible" :class="puzzle.is_accessible ? 'text-black' : 'text-gray-500'" class="flex justify-between items-center">
 					                <div>
 					                    <a v-if="puzzle.is_accessible" :href="'/puzzles/' + chapter.id + '/' + puzzle.order">
 					                        {{ puzzle.title }}

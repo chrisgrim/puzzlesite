@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
 use App\Models\Puzzle;
 use App\Models\Chapter;
 use App\Http\Middleware\EnsureUserHasPaid;
@@ -20,6 +21,7 @@ class PuzzleController extends Controller
 
 	public function index()
 	{
+
 	    $user = auth()->user(); // Assuming you're using Laravel's built-in authentication
 	    $progress = $user->progress()->first(); // Assuming there's always a progress record
 
@@ -81,6 +83,8 @@ class PuzzleController extends Controller
 	    ], 200);
 	}
 
+
+
 	private function getOrCreateSolution($user, $puzzle, $guess)
 	{
 	    $solution = $user->solutions()->firstOrNew(['puzzle_id' => $puzzle->id]);
@@ -132,4 +136,43 @@ class PuzzleController extends Controller
 
 	    return false;
 	}
+
+	private function validateGuessWithChatGPT($guess, $solution)
+	{
+	    $client = new \GuzzleHttp\Client();
+	    $apiKey = env('CHATGPT_API_KEY'); // Make sure to set your ChatGPT API key in the .env file
+
+	    $response = $client->post('https://api.openai.com/v1/chat/completions', [
+	        'headers' => [
+	            'Authorization' => 'Bearer ' . $apiKey,
+	            'Content-Type' => 'application/json',
+	        ],
+	        'json' => [
+	            'model' => 'gpt-4o-mini',
+	            'messages' => [
+	                [
+	                    'role' => 'system',
+	                    'content' => 'You are a helpful teachers assistant that checks if user guesses match the given solution. Dont give them advice. Keep your response short.'
+	                ],
+	                [
+	                    'role' => 'user',
+	                    'content' => "The solution is \"$solution\". The guess is \"$guess\". Is the guess correct? Provide feedback on the guess without revealing the solution."
+	                ]
+	            ],
+	            'max_tokens' => 50,
+	            'temperature' => 0.0,
+	        ],
+	    ]);
+
+	    $body = json_decode((string) $response->getBody(), true);
+	    $chatGPTResponse = trim($body['choices'][0]['message']['content']);
+
+	    // Sanitize the response to remove any unintended solution revelations
+	    if (stripos($chatGPTResponse, $solution) !== false) {
+	        $chatGPTResponse = 'incorrect - The guess is incorrect and not close enough. Try again.';
+	    }
+
+	    return $chatGPTResponse;
+	}
+
 }

@@ -9,17 +9,10 @@
 @endsection
 
 @section('content')
-    <main class="min-h-screen">
-        <side-bar :chapters="{{ json_encode($chapters) }}"></side-bar>
-
-        <div class="ml-[32rem]">
-            @foreach ($chapters as $chapter)
-                <component :is="'chapter-' + {{ $chapter->id }}" :chapter="{{ json_encode($chapter) }}"></component>
-            @endforeach
-        </div>
+    <main class="min-h-[30rem]">
+        <admin></admin>
     </main>
 @endsection
-
 
 @section('footer')
 
@@ -29,4 +22,3 @@
 </footer>
 
 @endsection 
-

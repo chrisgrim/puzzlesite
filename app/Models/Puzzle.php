@@ -13,8 +13,10 @@ class Puzzle extends Model
     protected $fillable = [
         'title',
         'description',
+        'solution',
         'difficulty',
-
+        'chapter_id',
+        'order'
     ];
 
     public function getRouteKeyName()

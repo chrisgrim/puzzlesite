@@ -1,16 +1,18 @@
 <template>
-	<div class="items-center mb-20 border border-black inline-block px-4 py-2">
-        <a class="uppercase text-md" href="/">Chapter 1</a>
+	<div class="items-center inline-block mb-20">
+        <a class="uppercase text-xl" href="/">Chapter 1 TENOR SANS</a>
+
     </div>
 
-    <div id="Header">
-        <h2 class="text-9xl mb-20"> {{props.puzzle.title}} </h2>
-        <div class="bg-black h-[.11rem] w-[10rem] mt-10"></div>
-        <DifficultyIndicator :difficulty="props.puzzle.difficulty" />
+    <div class="bg-[#b0a3c3] h-1 w-full mb-20"></div>
 
-        <div class="mt-14" style="white-space: pre-wrap;">
+    <div id="Header">
+        <h2 class="text-6xl mb-20"> {{props.puzzle.title}} </h2>
+
+        <!-- <div class="mt-14" style="white-space: pre-wrap;">
 	        <p>{{ props.puzzle.description }}</p>
-	    </div>
+	    </div> -->
+        <!-- <DifficultyIndicator :difficulty="props.puzzle.difficulty" /> -->
     </div>
 </template>
 

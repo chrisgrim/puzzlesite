@@ -4,21 +4,27 @@
         <!-- Header Section -->
         <Header :puzzle="props.puzzle" />
 
+        <div class="mt-14" style="white-space: pre-wrap;">
+            <p>{{ props.puzzle.description }}</p>
+        </div>
+
         <!-- Puzzle Section -->
         <div id="puzzle" class="puzzle flex flex-row items-center justify-center py-16">
             <div class="w-1/2">
                 <div class="w-full border border-black rounded-3xl overflow-hidden flex flex-col">
                     <div class="bg-gray-700 text-white text-center p-2">Union Daily</div>
                     <div class="mt-4 flex flex-col p-4">
-                        Correct Answer:
                         <div v-for="(answer, index) in correctAnswersList" :key="index">
                             {{ answer }}
+                        </div>
+                        <div>
+                            {{ correctAnswersList.length }} of 8 found
                         </div>
                     </div>
                 </div>
                 <div class="mt-12">
                     <p class="m-0">July 8, 2024</p>
-                    <p class="text-bold m-0"><b>By .... . .-.. .-..</b></p>
+                    <p class="text-bold m-0"><b>By Morris Kohd</b></p>
                 </div>
             </div>
 
@@ -27,6 +33,9 @@
                 <p class="text-center h-10 mb-8">{{ selectedLetters.join('') }}</p>
                 <svg ref="svgElement" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
                     <!-- Paths for Correct Answers -->
+                    <path v-for="(path, index) in morsePaths" :key="'correct-path-' + index"
+                          :d="path.d" stroke-linecap="round" stroke-width="12"
+                          stroke="black" fill="none"/>
                     <path v-for="(path, index) in correctAnswerPaths" :key="'correct-path-' + index"
                           :d="path.d" stroke-linecap="round" stroke-width="12"
                           :stroke="path.color" fill="none"/>
@@ -81,7 +90,7 @@ const puzzleLayout = [
     'N', 'L', 'V*', 'G', 'R*', 'N',
     'E', 'P', 'E', 'R*', 'Y*', 'I',
     'I*', 'N*', 'E*', 'S', 'D*', 'M*',
-    'F', 'O', 'A', 'M*', 'S*', 'E*',
+    'F', 'O*', 'A', 'M*', 'S*', 'E*',
     'L', 'D*', 'O', 'I*', 'N', 'S*',
     'S', 'I*', 'N*', 'D*', 'O*', 'P',
     'A*', 'G*', 'O', 'E*', 'V', 'A*',
@@ -102,7 +111,8 @@ const svgElement = ref(null);
 const svgStrokeColor = '#3B82F6';
 const lastSelectedId = ref(null);
 const correctSelections = ref(new Set());
-const correctAnswerPaths = ref([]); // Stores positions of correctly answered letters
+const correctAnswerPaths = ref([]);
+const morsePaths = ref([]);
 let isDragging = ref(false);
 let dragStartElement = null;
 let initialMouseDown = false;
@@ -120,7 +130,7 @@ const getClass = (id) => {
     return {
         'bg-blue-500 text-white': isSelected,
         'ring-gap !border-2 border-blue-500': isLastSelected,
-        'cursor-default bg-green-500': isCorrect && isGap,
+        'cursor-default bg-[#919191]': isCorrect && isGap,
         'cursor-default bg-black text-white': isCorrect && isDot,
     };
 };
@@ -129,21 +139,28 @@ const calculateNewPositions = () => {
     const letterIds = isDragging.value ? draggedLetters.value : selectedIds.value;
     return letterIds.map(id => {
         const letterElement = document.querySelector(`[data-id="${id}"]`);
-        if (letterElement) {
+        const letterObj = letters.find(letter => letter.id === id);
+        if (letterElement && letterObj) {
             const rect = letterElement.getBoundingClientRect();
             const svgRect = svgElement.value.getBoundingClientRect();
-            return { id, x: rect.left + rect.width / 2 - svgRect.left, y: rect.top + rect.height / 2 - svgRect.top };
+            return { 
+                id, 
+                x: rect.left + rect.width / 2 - svgRect.left, 
+                y: rect.top + rect.height / 2 - svgRect.top,
+                color: letterObj.color // Include the color information
+            };
         }
         return null;
     }).filter(pos => pos !== null);
 };
 
 
+
 const updateSvgPosition = (letterObj, event) => {
     if (svgElement.value) {
         const { left, top, width, height } = event.target.getBoundingClientRect();
         const { left: svgLeft, top: svgTop } = svgElement.value.getBoundingClientRect();
-        selectedIndices.value.push({ id: letterObj.id, x: left + width / 2 - svgLeft, y: top + height / 2 - svgTop });
+        selectedIndices.value.push({ id: letterObj.id, color: letterObj.id, x: left + width / 2 - svgLeft, y: top + height / 2 - svgTop });
     }
     updatePositions();
 };
@@ -306,10 +323,48 @@ const checkForSubmission = (type) => {
         selectedIds.value.forEach(id => correctSelections.value.add(id));
 
         // Prepare the SVG path data and color for the correct answer
-        const pathData = selectedIndices.value.reduce((acc, curr, index) => {
-            return `${acc} ${index === 0 ? 'M' : 'L'} ${curr.x},${curr.y}`;
-        }, '').trim();
-        correctAnswerPaths.value.push({ d: pathData, color: '#10B981' }); // Use green color for correct paths
+        let currentPath = "";
+        let currentColor = "";
+        const pathSegments = [];
+        const morseSegments = [];
+
+        selectedIndices.value.forEach((curr, index, array) => {
+            const next = array[index + 1];
+
+            if (index === 0) {
+                currentPath = `M ${curr.x},${curr.y}`;
+                currentColor = '#919191'; // Default to green
+            } else {
+                currentPath += ` L ${curr.x},${curr.y}`;
+                if (next) {
+                    const nextColor = (curr.color === 'black' && next.color === 'black') ? '#000000' : '#919191';
+                    if (nextColor !== currentColor || !next) {
+                        if (currentColor === '#000000') {
+                            morseSegments.push({ path: currentPath, color: currentColor });
+                        } else {
+                            pathSegments.push({ path: currentPath, color: currentColor });
+                        }
+                        currentPath = `M ${curr.x},${curr.y}`;
+                        currentColor = nextColor;
+                    }
+                }
+            }
+        });
+
+        // Push the final segment
+        if (currentColor === '#000000') {
+            morseSegments.push({ path: currentPath, color: currentColor });
+        } else {
+            pathSegments.push({ path: currentPath, color: currentColor });
+        }
+
+        pathSegments.forEach(segment => {
+            correctAnswerPaths.value.push({ d: segment.path, color: segment.color });
+        });
+
+        morseSegments.forEach(segment => {
+            morsePaths.value.push({ d: segment.path, color: segment.color });
+        });
 
         console.log('Correct answer:', selectedString);
         correctAnswersList.value.push(selectedString); // Add to correct answers list
@@ -319,6 +374,7 @@ const checkForSubmission = (type) => {
         resetSelections();
     }
 };
+
 
 const resetSelections = () => {
     selectedLetters.value = [];

@@ -29,6 +29,8 @@ const Purchase = defineAsyncComponent(() => import('./Auth/purchase.vue'));
 const ResetPassword = defineAsyncComponent(() => import('./Auth/reset-password.vue'));
 const EmailVerify = defineAsyncComponent(() => import('./Auth/email-verify.vue'));
 
+const Admin = defineAsyncComponent(() => import('./Admin/index.vue'));
+
 
 
 
@@ -68,6 +70,8 @@ app.component('profile', Profile);
 app.component('purchase', Purchase);
 app.component('reset-password', ResetPassword);
 app.component('email-verify', EmailVerify);
+
+app.component('admin', Admin);
 
 
 

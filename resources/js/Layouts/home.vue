@@ -1,53 +1,52 @@
 <template>
-    <div @mousemove="handleMouseMove">
-        <div class="relative flex justify-center items-center h-[calc(90vh-10rem)]">
-            <a href="/the-story" class="absolute z-50">
-                <h2 ref="textElement" class="text-center">THE OVERLAP</h2>
-            </a>
-            <div :style="firstCircleStyle" class="absolute w-[30rem] h-[30rem] border-2 border-black rounded-full"></div>
-            <div :style="secondCircleStyle" class="absolute w-[30rem] h-[30rem] bg-black bg-opacity-30 rounded-full blur-md"></div>
-        </div>
-    </div>
+  <div class="relative flex justify-center items-center w-screen overflow-hidden" 
+       :style="{ height: 'calc(100vh - 8rem)' }" 
+       @mousemove="updateCirclePosition">
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <clipPath id="circle-clip">
+          <circle :cx="circlePosition.x" :cy="circlePosition.y" :r="circleRadius" />
+        </clipPath>
+      </defs>
+      
+      <text x="50" y="50" text-anchor="middle" dominant-baseline="central"
+            class="text-[2vw] md:text-[2vw] uppercase h2">OVERLAP</text>
+      
+      <text x="50" y="50" text-anchor="middle" dominant-baseline="central"
+            class="text-[2vw] md:text-[2vw] uppercase h2 fill-white"
+            clip-path="url(#circle-clip)">OVERLAP</text>
+      
+      <circle :cx="circlePosition.x" :cy="circlePosition.y" :r="circleRadius"
+              fill="none" stroke="black" stroke-width="0.1" />
+    </svg>
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
-const textElement = ref(null);
-const firstCircleStyle = reactive({ left: '50%', transform: 'translateX(-50%)' });
-const secondCircleStyle = reactive({ left: '50%', transform: 'translateX(-50%)' });
+const circlePosition = ref({ x: 50, y: 50 });
+const circleRadius = ref(30);
 
-function handleMouseMove(event) {
-    if (textElement.value) {
-        const textRect = textElement.value.getBoundingClientRect();
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
-        const textCenterX = textRect.left + textRect.width / 2;
-        const textCenterY = textRect.top + textRect.height / 2;
-
-        // Calculate the Euclidean distance from the center of the text
-        const distance = Math.sqrt(Math.pow(mouseX - textCenterX, 2) + Math.pow(mouseY - textCenterY, 2));
-        const maxDistance = window.innerWidth / 2; // or another appropriate measure
-        let overlapFactor = Math.max(0, Math.min(1, 1 - distance / maxDistance));
-
-        // Calculate dynamic overlap percentages for the circle styles
-        const maxOffset = 50; // Maximum offset in percentage of the element's width
-        const offset = maxOffset * (1 - overlapFactor); // Dynamic offset from center
-
-        firstCircleStyle.transform = `translateX(${offset - 50}%)`;
-        secondCircleStyle.transform = `translateX(${-offset - 50}%)`;
-    }
-}
+const updateCirclePosition = (event) => {
+  const svgRect = event.currentTarget.getBoundingClientRect();
+  circlePosition.value = {
+    x: ((event.clientX - svgRect.left) / svgRect.width) * 100,
+    y: ((event.clientY - svgRect.top) / svgRect.height) * 100
+  };
+};
 
 onMounted(() => {
-    window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('mousemove', updateCirclePosition);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mousemove', updateCirclePosition);
 });
 </script>
 
-<style>
-/* Ensure any additional styling is correct */
+<style scoped>
+.h2 {
+  font-family: inherit;
+}
 </style>

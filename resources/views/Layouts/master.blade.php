@@ -8,7 +8,7 @@
         <header id="header">
             @yield('nav')
         </header>
-		<main>
+		<main class="pt-32">
 			@yield('content')
 		</main>
 		@include('layouts.footer')
