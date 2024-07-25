@@ -1,32 +1,117 @@
 <template>
-    <div class="w-full flex p-8 max-w-screen-lg relative">
-        <div class="w-4/6 mt-20">
-            <div class="my-10 mb-40">
-                <h1 class="text-8xl mt-20">Chapter {{ chapter.id }}: <br>{{ chapter.title }}</h1>
+    <div class="w-full flex p-8 max-w-screen-lg relative book-page">
+        <div class="w-[70rem] page-front" :class="{ 'flipped': isPuzzleVisible[0] }">
+            <div class="mt-40 z-10 pb-10">
+                <h1 class="text-9xl mt-20">
+                    Chapter {{ chapter.id }}: <br>{{ chapter.title }}
+                </h1>
             </div>
-            <div class="typewriter text-lg">
+            <div class="typewriter text-lg mt-96">
                 <p style="white-space: pre-wrap;">Arthur's passion for puzzles was not merely a hobby, but a reflection of his view of the world—a world where every problem held a solution, every confusion a clarifying moment, if only one could find the right solution at the right time.<br>
                 As one would expect, Author lived in a world of puzzles and endless cryptograms. His apartment was a direct reflection of his mind—organized, intricate, and full of secrets waiting to be unlocked. Each corner of his living space was meticulously curated with puzzles that ranged from the ancient and mechanical to the modern and digital, each piece carefully selected not only for its complexity but also for its beauty.
                 Walls lined with shelves displayed cryptic puzzle boxes crafted from exotic woods and metals, each bearing a history of mysteries solved and secrets contained. The tables were strewn with folded newspapers, their crosswords inked in halfway, awaiting completion. Above his desk, a large bulletin board was peppered with maps dotted with coded pins, charting unsolved mysteries and cryptic scavenger hunts that spanned the globe.
                 </p>
             </div>
 
-            <PuzzleItem 
-                :puzzle="chapter.puzzles[0]" 
-                :chapterId="chapter.id"
-            />
+           <div class="relative" @click="togglePuzzle(0)">
+                <div>
+                    <div :id="`puzzle-${chapter.id}-${chapter.puzzles[0].order}`" class="absolute w-20 h-20 bg-black top-[14rem]"></div>
+                </div>
+            </div>
+
+            <!-- <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[1].order}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[1]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
 
             <div class="typewriter text-lg">
                 <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 </p>
             </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[2].order}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[2]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
+            <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[3].order}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[3]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
+            <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[4].order}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[4]" 
+                    :chapterId="chapter.id"
+                />
+            </div> -->
+
+        </div>
+        <div class="page-back h-20 w-20" :class="{ 'flipped': isPuzzleVisible[0] }">
+            <PuzzleOneOne 
+                v-if="isPuzzleVisible[0]"
+                :puzzle="chapter.puzzles[0]" 
+                :chapter="chapter"
+                :user="user"
+            />
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps,ref } from 'vue';
 import PuzzleItem from '@/Global/puzzleItem.vue';
+import PuzzleOneOne from '@/Chapters/ChapterOne/puzzle-1-page.vue';  // Add this line
+
 
 const props = defineProps({
     chapter: {
@@ -34,6 +119,14 @@ const props = defineProps({
         required: true,
     },
 });
+
+const isPuzzleVisible = ref(Array(props.chapter.puzzles.length).fill(false));
+
+function togglePuzzle(index) {
+    isPuzzleVisible.value[index] = !isPuzzleVisible.value[index];
+}
+
+
 </script>
 
 <style>
@@ -50,5 +143,34 @@ const props = defineProps({
     100% {
         opacity: 0;
     }
+}
+
+.book-page {
+    perspective: 1500px;
+}
+
+.page-front, .page-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.page-front {
+    z-index: 2;
+}
+
+.page-back {
+    transform: rotateY(180deg);
+}
+
+.page-front.flipped {
+    transform: rotateY(-180deg);
+}
+
+.page-back.flipped {
+    transform: rotateY(0deg);
 }
 </style>

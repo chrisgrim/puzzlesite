@@ -7,7 +7,7 @@
     <div class="bg-[#b0a3c3] h-1 w-full mb-20"></div>
 
     <div id="Header">
-        <h2 class="text-6xl mb-20"> {{props.puzzle.title}} </h2>
+        <h1 class="text-9xl mb-20"> {{props.puzzle.title}} </h1>
 
         <!-- <div class="mt-14" style="white-space: pre-wrap;">
 	        <p>{{ props.puzzle.description }}</p>

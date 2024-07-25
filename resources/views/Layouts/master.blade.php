@@ -11,6 +11,6 @@
 		<main class="pt-32">
 			@yield('content')
 		</main>
-		@include('layouts.footer')
+		@include('Layouts.footer')
 	</body>
 </html>

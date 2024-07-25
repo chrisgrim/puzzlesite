@@ -1,8 +1,32 @@
 <template>
-    <div class="max-w-screen-lg m-auto my-24 p-8">
+    <div class="max-w-screen-lg m-auto my-24 p-8" :class="{ 'shake': isShaking }">
 
         <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
+
+        <div class="my-14">
+            <HiddenTextSlider ref="hiddenTextSlider" @shake="triggerShake">
+                <template #original-text>
+                    <span @click="handleTestWordClick(1)">Test</span> ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure <span @click="handleTestWordClick(2)">Test</span> in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. <span @click="handleTestWordClick(3)">Test</span> sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </template>
+                <template #hidden-text>
+                    <p class="p-4">
+                        Dont go down that path Neo!
+                    </p>
+                </template>
+            </HiddenTextSlider>
+        </div>
 
         <!-- Puzzle Section -->
         <div id="puzzle" class="puzzle flex flex-col items-center justify-center">
@@ -41,6 +65,7 @@
 import { ref } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
+import HiddenTextSlider from '@/Global/Puzzles/hiddenTextSlider.vue';
 
 const props = defineProps({
     user: Object,
@@ -52,6 +77,10 @@ const props = defineProps({
 let currentShape = null;
 let offsetX = 0;
 let offsetY = 0;
+
+const isShaking = ref(false);
+const hiddenTextSlider = ref(null);
+
 
 function startDrag(event, shape) {
     currentShape = shape;
@@ -132,5 +161,42 @@ const shapes = ref([
         y: 20 
     }
 ]);
+
+function handleTestWordClick(wordIndex) {
+    hiddenTextSlider.value.handleTestWordClick(wordIndex);
+}
+
+function triggerShake() {
+    isShaking.value = true;
+    setTimeout(() => {
+        isShaking.value = false;
+    }, 500); // Duration of the shake effect
+}
+
 </script>
+
+<style scoped>
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.shake {
+  animation: shake 0.5s;
+  animation-iteration-count: 1;
+}
+
+.no-select {
+  user-select: none;
+}
+</style>
 

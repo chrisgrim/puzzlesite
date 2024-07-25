@@ -10,9 +10,9 @@
 
 @section('content')
     <main class="min-h-screen">
-        <side-bar :chapters="{{ json_encode($chapters) }}"></side-bar>
+        {{-- <side-bar :chapters="{{ json_encode($chapters) }}"></side-bar> --}}
 
-        <div class="ml-[32rem]">
+        <div class="ml-[38rem]">
             @foreach ($chapters as $chapter)
                 <component :is="'chapter-' + {{ $chapter->id }}" :chapter="{{ json_encode($chapter) }}"></component>
             @endforeach

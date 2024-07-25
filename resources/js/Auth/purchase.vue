@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex p-8 max-w-screen-lg relative m-auto">
-        <div class="w-4/6 mt-40">
+        <div class="w-5/6 mt-40">
             <div class="w-60 border-b bg-black h-1"></div>
             <div class="my-10 mb-40">
                 <h2 class="text-8xl">Before We Begin</h2>
@@ -35,14 +35,18 @@
                 </div>
                 <button @click.prevent="handlePayment" class="mt-4" type="submit">Submit Payment</button>
             </form>
+
+        </div>
+        <div class="w-1/6 border-l border-black">
+            <Sidebar></Sidebar>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
+import Sidebar from './purchase-side.vue';
 
 const props = defineProps({
     user: {
