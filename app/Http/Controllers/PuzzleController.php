@@ -53,7 +53,7 @@ class PuzzleController extends Controller
 	        return redirect()->back();
 	    }
 	    
-	    return view("Puzzles.Chapter{$chapter->id}.puzzle{$puzzle->order}", [
+	    return view("Puzzles.Chapter{$chapter->id}.puzzle{$puzzle->id}", [
             'puzzle' => $puzzle,
             'chapter' => $chapter,
             'solution' => $solution,
@@ -109,7 +109,7 @@ class PuzzleController extends Controller
 	    $progress = $user->progress()->first();
 
         $progress->chapter_id = $chapter->id;
-        $progress->puzzle_order = $puzzle->order;
+        $progress->puzzle_id = $puzzle->id;
         $progress->save();
 	    
 	}
@@ -119,18 +119,18 @@ class PuzzleController extends Controller
 	    $progress = $user->progress()->first(); // Assuming there's always a progress record
 
 	    // Same chapter, next puzzle
-	    if ($chapter->id == $progress->chapter_id && $puzzle->order <= $progress->puzzle_order + 1) {
+	    if ($chapter->id == $progress->chapter_id && $puzzle->id <= $progress->puzzle_id + 1) {
 	        return true;
 	    }
 
 	    // Next chapter, first puzzle
-	    if ($chapter->id == $progress->chapter_id + 1 && $puzzle->order == 1) {
-	        $lastPuzzleOrderInPrevChapter = Puzzle::where('chapter_id', $progress->chapter_id)->max('order');
-	        return $progress->puzzle_order == $lastPuzzleOrderInPrevChapter;
+	    if ($chapter->id == $progress->chapter_id + 1 && $puzzle->id == 1) {
+	        $lastPuzzleOrderInPrevChapter = Puzzle::where('chapter_id', $progress->chapter_id)->max('id');
+	        return $progress->puzzle_id == $lastPuzzleOrderInPrevChapter;
 	    }
 
 	    // Special case: allow access to the first puzzle of the first chapter
-	    if ($chapter->id == 1 && $puzzle->order == 1) {
+	    if ($chapter->id == 1 && $puzzle->id == 1) {
 	        return true;
 	    }
 

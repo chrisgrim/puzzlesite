@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('puzzles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chapter_id')->constrained()->onDelete('cascade');
-            $table->integer('order')->default(0); 
             $table->string('title');
             $table->text('description');
             $table->string('solution')->nullable();

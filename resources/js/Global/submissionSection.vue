@@ -35,14 +35,14 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    chapterId: {
-        type: Number,
+    chapter: {
+        type: Object,
         required: true,
     },
-    puzzleOrder: {
-        type: Number,
+    puzzle: {
+        type: Object,
         required: true,
-    }
+    },
 });
 
 let guess = ref('');
@@ -61,7 +61,7 @@ async function submitGuess() {
     }
     message.value = 'Submitting...';
     try {
-        const response = await axios.post(`/api/puzzles/${props.chapterId}/${props.puzzleOrder}/guess`, {
+        const response = await axios.post(`/api/puzzles/${props.chapter.id}/${props.puzzle.id}/guess`, {
             guess: guess.value
         });
         const data = response.data;

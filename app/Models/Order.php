@@ -9,10 +9,16 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'stripe_charge_id', 'amount', 'description'];
+    protected $fillable = ['user_id', 'payment_id', 'amount', 'description', 'payment_method', 'status'];
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bitcoinTransaction()
+    {
+        return $this->hasOne(BitcoinTransaction::class);
     }
 }

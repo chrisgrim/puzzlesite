@@ -47,7 +47,6 @@ class AdminController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'order' => 'required|integer',
         ]);
 
         $chapter = Chapter::create($request->all());
@@ -59,7 +58,6 @@ class AdminController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'order' => 'required|integer',
         ]);
 
         $chapter->update($request->all());
@@ -67,21 +65,9 @@ class AdminController extends Controller
         return response()->json($chapter, 200);
     }
 
-    public function reorderChapter(Request $request, Chapter $chapter)
-    {
-        $puzzles = $request->input('puzzles');
-
-        foreach ($puzzles as $puzzleData) {
-            Puzzle::where('id', $puzzleData['id'])
-                ->update(['order' => $puzzleData['order']]);
-        }
-
-        return response()->json(['message' => 'Puzzles reordered successfully'], 200);
-    }
-
     public function getChapter()
     {
-        $chapters = Chapter::with('puzzles')->orderBy('order')->get();
+        $chapters = Chapter::with('puzzles')->get();
         return response()->json($chapters);
     }
 }

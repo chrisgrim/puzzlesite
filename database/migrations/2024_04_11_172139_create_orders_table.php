@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('stripe_charge_id')->unique();
-            $table->integer('amount');
+            $table->string('payment_id')->unique()->nullable(); // This can be stripe_charge_id or bitcoin_transaction_id
+            $table->decimal('amount', 10, 2);
             $table->text('description');
+            $table->enum('payment_method', ['stripe', 'bitcoin']);
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
         });
     }

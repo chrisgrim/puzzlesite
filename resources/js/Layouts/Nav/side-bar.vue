@@ -10,8 +10,8 @@
                                 <div v-if="puzzle.is_accessible" 
                                      :class="puzzle.is_accessible ? 'text-black' : 'text-gray-500'" 
                                      class="flex justify-between items-center">
-                                    <div @mouseenter="scrollToPuzzle(chapter.id, puzzle.order)">
-                                        <a v-if="puzzle.is_accessible" :href="'/puzzles/' + chapter.id + '/' + puzzle.order">
+                                    <div @mouseenter="scrollToPuzzle(chapter.id, puzzle.id)">
+                                        <a v-if="puzzle.is_accessible" :href="'/puzzles/' + chapter.id + '/' + puzzle.id">
                                             {{ puzzle.title }}
                                         </a>
                                         <span v-else>
@@ -37,8 +37,8 @@ export default {
         },
     },
     methods: {
-        scrollToPuzzle(chapterId, puzzleOrder) {
-            const puzzleElement = document.getElementById(`puzzle-${chapterId}-${puzzleOrder}`);
+        scrollToPuzzle(chapterId, puzzleId) {
+            const puzzleElement = document.getElementById(`puzzle-${chapterId}-${puzzleId}`);
             if (puzzleElement) {
                 puzzleElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }

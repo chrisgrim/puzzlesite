@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full flex p-8 max-w-screen-lg relative book-page">
-        <div class="w-[70rem] page-front" :class="{ 'flipped': isPuzzleVisible[0] }">
+    <div class="w-full flex p-8 max-w-screen-lg relative">
+        <div class="w-[70rem]">
             <div class="mt-40 z-10 pb-10">
                 <h1 class="text-9xl mt-20">
                     Chapter {{ chapter.id }}: <br>{{ chapter.title }}
@@ -13,13 +13,15 @@
                 </p>
             </div>
 
-           <div class="relative" @click="togglePuzzle(0)">
-                <div>
-                    <div :id="`puzzle-${chapter.id}-${chapter.puzzles[0].order}`" class="absolute w-20 h-20 bg-black top-[14rem]"></div>
-                </div>
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[0].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[0]" 
+                    :chapterId="chapter.id"
+                />
             </div>
 
-            <!-- <div class="typewriter text-lg">
+            <div class="typewriter text-lg">
                 <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -31,7 +33,7 @@
             </div>
 
             <div class="relative">
-                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[1].order}`" class="absolute top-[14rem]"></div>
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[1].id}`" class="absolute top-[14rem]"></div>
                 <PuzzleItem 
                     :puzzle="chapter.puzzles[1]" 
                     :chapterId="chapter.id"
@@ -50,7 +52,7 @@
             </div>
 
             <div class="relative">
-                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[2].order}`" class="absolute top-[14rem]"></div>
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[2].id}`" class="absolute top-[14rem]"></div>
                 <PuzzleItem 
                     :puzzle="chapter.puzzles[2]" 
                     :chapterId="chapter.id"
@@ -69,7 +71,7 @@
             </div>
 
             <div class="relative">
-                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[3].order}`" class="absolute top-[14rem]"></div>
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[3].id}`" class="absolute top-[14rem]"></div>
                 <PuzzleItem 
                     :puzzle="chapter.puzzles[3]" 
                     :chapterId="chapter.id"
@@ -88,30 +90,20 @@
             </div>
 
             <div class="relative">
-                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[4].order}`" class="absolute top-[14rem]"></div>
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[4].id}`" class="absolute top-[14rem]"></div>
                 <PuzzleItem 
                     :puzzle="chapter.puzzles[4]" 
                     :chapterId="chapter.id"
                 />
-            </div> -->
+            </div>
 
-        </div>
-        <div class="page-back h-20 w-20" :class="{ 'flipped': isPuzzleVisible[0] }">
-            <PuzzleOneOne 
-                v-if="isPuzzleVisible[0]"
-                :puzzle="chapter.puzzles[0]" 
-                :chapter="chapter"
-                :user="user"
-            />
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps,ref } from 'vue';
+import { defineProps } from 'vue';
 import PuzzleItem from '@/Global/puzzleItem.vue';
-import PuzzleOneOne from '@/Chapters/ChapterOne/puzzle-1-page.vue';  // Add this line
-
 
 const props = defineProps({
     chapter: {
@@ -119,14 +111,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-const isPuzzleVisible = ref(Array(props.chapter.puzzles.length).fill(false));
-
-function togglePuzzle(index) {
-    isPuzzleVisible.value[index] = !isPuzzleVisible.value[index];
-}
-
-
 </script>
 
 <style>
@@ -143,34 +127,5 @@ function togglePuzzle(index) {
     100% {
         opacity: 0;
     }
-}
-
-.book-page {
-    perspective: 1500px;
-}
-
-.page-front, .page-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-}
-
-.page-front {
-    z-index: 2;
-}
-
-.page-back {
-    transform: rotateY(180deg);
-}
-
-.page-front.flipped {
-    transform: rotateY(-180deg);
-}
-
-.page-back.flipped {
-    transform: rotateY(0deg);
 }
 </style>

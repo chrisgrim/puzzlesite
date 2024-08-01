@@ -16,13 +16,7 @@ class Puzzle extends Model
         'solution',
         'difficulty',
         'chapter_id',
-        'order'
     ];
-
-    public function getRouteKeyName()
-    {
-        return 'order'; 
-    }
 
     public function chapter()
     {

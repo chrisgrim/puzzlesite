@@ -26,10 +26,5 @@ class AppServiceProvider extends ServiceProvider
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
 
-        // Custom binding for Puzzle
-        Route::bind('order', function ($value, $route) {
-            $chapterId = $route->parameter('chapter');
-            return Puzzle::where('chapter_id', $chapterId)->where('order', $value)->firstOrFail();
-        });
     }
 }

@@ -55,8 +55,8 @@
         <SubmissionSection 
             :question="'What was hidden in the shapes?'"
             :solution="props.solution" 
-            :chapter-id="props.chapter.id"
-            :puzzle-order="props.puzzle.order"
+            :chapter="props.chapter"
+            :puzzle="props.puzzle"
         />
     </div>
 </template>

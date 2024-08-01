@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chapter extends Model
 {
-    protected $fillable = ['title', 'order'];
+    protected $fillable = ['title'];
     
     public function puzzles()
     {
-        return $this->hasMany(Puzzle::class)->orderBy('order');
+        return $this->hasMany(Puzzle::class);
     }
 }

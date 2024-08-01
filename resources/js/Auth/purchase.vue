@@ -36,6 +36,9 @@
                 <button @click.prevent="handlePayment" class="mt-4" type="submit">Submit Payment</button>
             </form>
 
+            <div class="my-10">
+                <BitcoinPayment />
+            </div>
         </div>
         <div class="w-1/6 border-l border-black">
             <Sidebar></Sidebar>
@@ -47,6 +50,8 @@
 import { ref, onMounted } from 'vue';
 import { loadStripe } from '@stripe/stripe-js';
 import Sidebar from './purchase-side.vue';
+import BitcoinPayment from './bitcoinPayment.vue';
+import axios from 'axios';
 
 const props = defineProps({
     user: {
@@ -61,16 +66,63 @@ const couponCode = ref('');
 const errors = ref({});
 const stripeError = ref({});
 const randomPart = ref('');
+
 const generateDiscountCode = (email) => {
     const firstTwoLetters = email.substring(0, 2);  // Extracts the first two letters of the email
     const randomPart = Math.floor(10 + Math.random() * 90);  // Generates a two-digit random number
     const fullCode = `${firstTwoLetters}${randomPart}`;
-    return { fullCode, randomPart};
+    return { fullCode, randomPart };
 };
 const generatedCode = ref('');
 
-
 let stripe, elements, card;
+
+const handlePayment = async () => {
+    const { token, error } = await stripe.createToken(card);
+
+    if (error) {
+        stripeError.value = error.message;
+    } else {
+        processPayment(token.id);
+    }
+};
+
+function clear() {
+    errors.value = {};
+}
+
+const processPayment = async (token) => {
+    errors.value = {};
+    stripeError.value = {};
+
+    let coupon = false;
+
+    if (couponCode.value.trim() !== "") {
+        if (couponCode.value === generatedCode.value) {
+            coupon = true;  // Coupon code is valid, apply discount
+        } else {
+            errors.value = { coupon: ["Invalid discount code. Please check and try again."] };
+            return; // Stop further execution if the code does not match
+        }
+    }
+
+    try {
+        const response = await axios.post('/process-payment', {
+            token,
+            coupon,
+        });
+
+        errors.value = '';
+        window.location.href = '/';
+    } catch (err) {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            errors.value = err.response.data.errors;
+        } else {
+            errors.value = { general: ["An unexpected error occurred. Please try again."] };
+        }
+    }
+};
 
 onMounted(async () => {
     stripe = await stripePromise;
@@ -90,7 +142,7 @@ onMounted(async () => {
             iconColor: '#e53e3e',
         }
     };
-    card = elements.create('card');
+    card = elements.create('card', { style });
     card.mount('#card-element');
     if (props.user && props.user.email) {
         const codeData = generateDiscountCode(props.user.email);
@@ -98,55 +150,4 @@ onMounted(async () => {
         randomPart.value = codeData.randomPart;  // Save the random part
     }
 });
-
-const handlePayment = async () => {
-    const { token, error } = await stripe.createToken(card);
-
-    if (error) {
-        stripeError.value = error.message;
-    } else {
-        processPayment(token.id);
-    }
-};
-
-function clear() {
-    errors.value = {}
-}
-
-const processPayment = async (token) => {
-
-    errors.value = {}
-    stripeError.value = {}
-
-    let coupon = false;
-
-    if (couponCode.value.trim() !== "") {
-        if (couponCode.value === generatedCode.value) {
-            coupon = true;  // Coupon code is valid, apply discount
-        } else {
-            errors.value = { coupon: ["Invalid discount code. Please check and try again."] };
-            return; // Stop further execution if the code does not match
-        }
-    }
-
-
-    try {
-        const response = await axios.post('/process-payment', {
-            token,
-            coupon,
-        });
-
-        errors.value = '';
-        window.location.href = '/';
-    } catch (err) {
-        console.log(err);
-        // Here, we check if the error response exists and has the expected structure
-        if (err.response && err.response.data && err.response.data.errors) {
-            errors.value = err.response.data.errors;
-        } else {
-            // Fallback or generic error message if the response doesn't match expected structure
-            errors.value = { general: ["An unexpected error occurred. Please try again."] };
-        }
-    }
-};
 </script>

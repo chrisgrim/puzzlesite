@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chapters', function (Blueprint $table) {
+        Schema::create('bitcoin_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->string('bitcoin_address');
+            $table->decimal('amount', 16, 8);
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chapters');
+        Schema::dropIfExists('bitcoin_transactions');
     }
 };

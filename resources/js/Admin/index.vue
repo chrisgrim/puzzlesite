@@ -64,30 +64,24 @@
                                 <th class="py-3 px-6 text-center w-1/12">Actions</th>
                             </tr>
                         </thead>
-                        <draggable v-model="chapter.puzzles" @end="reorderPuzzles(chapter)" tag="tbody" :component-data="{
-                            class: 'text-gray-600 font-light'
-                        }">
-                            <template #item="{ element: puzzle }">
-                                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                    <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
-                                        {{puzzle.order}}
-                                        <input v-model="puzzle.title" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
-                                    </td>
-                                    <td class="py-3 px-6 text-left w-2/6">
-                                        <textarea v-model="puzzle.description" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" rows="2"></textarea>
-                                    </td>
-                                    <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
-                                        <input v-model="puzzle.solution" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
-                                    </td>
-                                    <td class="py-3 px-6 text-center w-1/12">
-                                        <input v-model="puzzle.difficulty" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none text-center w-full" type="text">
-                                    </td>
-                                    <td class="py-3 px-6 text-center w-1/12">
-                                        <button @click="deletePuzzle(puzzle)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Delete</button>
-                                    </td>
-                                </tr>
-                            </template>
-                        </draggable>
+                        <tr v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
+                                {{puzzle.id}}
+                                <input v-model="puzzle.title" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
+                            </td>
+                            <td class="py-3 px-6 text-left w-2/6">
+                                <textarea v-model="puzzle.description" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" rows="2"></textarea>
+                            </td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
+                                <input v-model="puzzle.solution" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
+                            </td>
+                            <td class="py-3 px-6 text-center w-1/12">
+                                <input v-model="puzzle.difficulty" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none text-center w-full" type="text">
+                            </td>
+                            <td class="py-3 px-6 text-center w-1/12">
+                                <button @click="deletePuzzle(puzzle)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">Delete</button>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -98,7 +92,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import draggable from 'vuedraggable';
 
 const newChapter = ref({ title: '' });
 const newPuzzle = ref({
@@ -122,15 +115,9 @@ const fetchChapters = async () => {
 
 const addChapter = async () => {
     try {
-        // Determine the next order number
-        const nextOrder = chapters.value.length > 0 
-            ? Math.max(...chapters.value.map(chapter => chapter.order)) + 1 
-            : 1;
-
         // Add the new chapter with the determined order number
         await axios.post('/api/admin/chapter', { 
-            ...newChapter.value, 
-            order: nextOrder 
+            ...newChapter.value,
         });
 
         fetchChapters(); // Refresh the chapter list
@@ -166,7 +153,7 @@ const updateChapter = async (chapter) => {
 
 const updatePuzzle = async (puzzle) => {
     try {
-        await axios.put(`/api/admin/puzzles/${puzzle.order}`, puzzle);
+        await axios.put(`/api/admin/puzzles/${puzzle.id}`, puzzle);
     } catch (error) {
         console.error(error);
     }
@@ -176,25 +163,6 @@ const deletePuzzle = async (puzzle) => {
     try {
         await axios.delete(`/api/admin/puzzles/${puzzle.id}`);
         fetchChapters(); // Refresh the chapter list
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-const reorderPuzzles = async (chapter) => {
-    try {
-        const updatedPuzzles = chapter.puzzles.map((puzzle, index) => ({
-            id: puzzle.id,
-            order: index + 1 // Start order from 1
-        }));
-
-        await axios.put(`/api/admin/chapters/${chapter.id}/reorder`, { puzzles: updatedPuzzles });
-
-        // Update local order immediately
-        chapter.puzzles = chapter.puzzles.map((puzzle, index) => ({
-            ...puzzle,
-            order: index + 1 // Start order from 1
-        }));
     } catch (error) {
         console.error(error);
     }

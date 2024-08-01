@@ -11,8 +11,7 @@ class UserProgress extends Model
 
     protected $fillable = [
         'user_id',
-        'chapter_id',
-        'puzzle_order'
+        'chapter_id'
     ];
 
     public function user()
