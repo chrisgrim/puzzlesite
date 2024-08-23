@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('bitcoin_address');
             $table->decimal('amount', 16, 8);
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->string('webhook_id')->nullable()->unique();
+            $table->string('webhook_url')->nullable();
+            $table->integer('confirmations')->default(0);
             $table->timestamps();
         });
     }

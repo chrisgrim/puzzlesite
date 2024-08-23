@@ -11,6 +11,7 @@ use App\Models\UserSolution;
 use App\Http\Middleware\CustomEnsureEmailIsVerified;
 use App\Http\Middleware\RedirectIfUserHasPaid;
 
+use App\Http\Controllers\BlockCypherWebhookController;
 use App\Http\Controllers\BitcoinController;
 
 
@@ -37,26 +38,8 @@ Route::post('/bitcoin/create-transaction', [BitcoinController::class, 'createTra
 Route::post('/bitcoin/send-transaction', [BitcoinController::class, 'sendTransaction']);
 Route::get('/bitcoin/fund-address', [BitcoinController::class, 'fundAddress']);
 
+// Route::get('/delete-webhook/{hookId}', [BlockCypherWebhookController::class, 'deleteWebhook']);
 
-Route::get('/test-bitcoin-payment', function (Request $request, BitcoinController $bitcoinController) {
-    // Hardcoded address and amount for testing
-    $newAddress = 'BuE75PQLDiU4LuQCsQLvyub2RJCeQkkizh'; // Replace with a valid address
-    $amount = 1000000;
-
-    // Create a request to fund the address
-    $fundRequest = new Request([
-        'address' => $newAddress,
-        'amount' => $amount,
-    ]);
-
-    // Call the fundAddress method
-    $fundResponse = $bitcoinController->fundAddress($fundRequest);
-
-    // Log the response for debugging
-    Log::info('Fund Address Response:', $fundResponse);
-
-    return response()->json($fundResponse);
-});
 
 
 

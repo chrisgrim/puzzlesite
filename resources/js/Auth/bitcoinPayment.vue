@@ -10,7 +10,11 @@
             <div v-if="countdown > 0">
                 <p>Your transaction amount will refresh in {{ countdown }} seconds.</p>
             </div>
+            <div>
+                <p>Confirmations: {{ confirmations }} / {{ requiredConfirmations }}</p>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -25,6 +29,9 @@ const countdown = ref(100); // Set countdown to 5 seconds for testing purposes
 const countdownInterval = ref(null);
 const errors = ref({});
 const pendingOrder = ref(null); // Variable to store the pending order
+const confirmations = ref(0);
+const requiredConfirmations = ref(2);
+const pollingInterval = ref(null);
 
 const qrCodeSvg = computed(() => {
     if (bitcoinAddress.value && bitcoinAmount.value > 0) {
@@ -37,22 +44,35 @@ const qrCodeSvg = computed(() => {
     return '';
 });
 
+const startPolling = () => { 
+    pollingInterval.value = setInterval(async () => {
+        try {
+            const response = await axios.get(`/api/check-bitcoin-payment/${pendingOrder.value.id}`);
+            confirmations.value = response.data.confirmations
+            if (response.data.confirmed) { alert('You Have paid succuful') }
+            
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error checking payment status:', error);
+        }
+    }, 5000); // Check every 5 seconds
+};
+
 const handleBitcoinPayment = async () => {
     try {
         if (pendingOrder.value) {
-            // Use the existing pending order details
             bitcoinAddress.value = pendingOrder.value.bitcoinTransaction.bitcoin_address;
             bitcoinAmount.value = pendingOrder.value.bitcoinTransaction.amount;
         } else {
-            // Generate new Bitcoin address and create a new order
             const response = await axios.get('/bitcoin/generate-address');
             bitcoinAddress.value = response.data.bitcoin_address;
             await updateBitcoinAmount();
             await saveBitcoinTransaction();
         }
 
-        // Start countdown timer
         startCountdown();
+        startPolling();
+
     } catch (err) {
         console.log(err);
         errors.value = { general: ["An error occurred while generating the Bitcoin address. Please try again."] };
@@ -95,6 +115,14 @@ const clearCountdown = () => {
     }
 };
 
+const clearPolling = () => {
+    if (pollingInterval.value) {
+        clearInterval(pollingInterval.value);
+        pollingInterval.value = null;
+    }
+};
+
+
 const updateBitcoinAmount = async () => {
     try {
         const response = await axios.get('/api/bitcoin-price');
@@ -122,8 +150,10 @@ onMounted(async () => {
     try {
         const response = await axios.get('/api/get-pending-order');
         if (response.status === 200 && response.data) {
+            pendingOrder.value = response.data.order.bitcoin_transaction
             bitcoinAddress.value = response.data.order.bitcoin_transaction.bitcoin_address;
             startCountdown();
+            startPolling();
         }
     } catch (err) {
         console.error('Error fetching existing order:', err);
@@ -132,5 +162,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
     clearCountdown(); // Clear countdown when the component is unmounted
+    clearPolling();
 });
 </script>

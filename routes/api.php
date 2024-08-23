@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PuzzleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BitcoinController;
+use App\Http\Controllers\BlockCypherWebhookController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -25,8 +26,10 @@ Route::POST('/puzzles/{chapter}/{puzzle}/guess', [PuzzleController::class, 'gues
 Route::post('/create-bitcoin-order', [BitcoinController::class, 'store']);
 Route::get('/get-pending-order', [BitcoinController::class, 'getPendingOrder']);
 Route::get('/bitcoin-price', [BitcoinController::class, 'price']);
+
+Route::get('/check-bitcoin-payment/{order}', [BitcoinController::class, 'checkPaymentStatus']);
 Route::post('/blockcypher/webhook', [BlockCypherWebhookController::class, 'handle']);
-Route::post('/register-blockcypher-webhook', [BlockCypherWebhookController::class, 'registerWebhook']);
+
 
 
 

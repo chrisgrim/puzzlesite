@@ -41,4 +41,19 @@ class BitcoinActions extends BaseAction
     {
         return $this->post('txs/send', $signedTx);
     }
+
+    public function registerWebhook(string $url, string $address)
+    {
+        return $this->post('hooks', [
+            'event' => 'tx-confirmation',
+            'url' => $url,
+            'address' => $address,
+            'confirmations' => 3
+        ]);
+    }
+
+    public function deleteWebhook(string $webhookId): array
+    {
+        return $this->request('DELETE', "hooks/{$webhookId}");
+    }
 }

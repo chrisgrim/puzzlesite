@@ -39,12 +39,12 @@ abstract class BaseAction
         }
     }
 
-    protected function get(string $endpoint, array $params = []): array
+    public function get(string $endpoint, array $params = []): array
     {
         return $this->request('GET', $endpoint, ['query' => $params]);
     }
 
-    protected function post(string $endpoint, array $data = []): array
+    public function post(string $endpoint, array $data = []): array
     {
         return $this->request('POST', $endpoint, ['json' => $data]);
     }
