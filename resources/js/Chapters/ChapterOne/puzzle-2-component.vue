@@ -11,7 +11,9 @@
                     <span class="text relative z-10">Hour</span>
                 </button>
                 <button 
-                    @click="updateMinute"
+                    @mousedown="startMinuteHold"
+                    @mouseup="stopMinuteHold"
+                    @mouseleave="stopMinuteHold"
                     class="button-10 h-20 relative inline-block cursor-pointer outline-none border-0 align-middle text-inherit font-inherit font-semibold text-[#382b22] uppercase py-5 px-8 bg-white border-2 border-solid border-[#8d8d8d] rounded-xl transform transition-all duration-150 ease-in-out hover:bg-[#ebebeb] hover:translate-y-1 active:bg-[#ffe9e9] active:translate-y-3 before:absolute before:content-[''] before:w-full before:h-full before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#c4c4c4] before:rounded-inherit before:shadow-[0_0_0_2px_#828282,0_0.625em_0_0_#929292] before:translate-y-3 before:-translate-z-4 before:transition-transform before:duration-150 before:ease-in-out"
                     role="button"
                 >
@@ -33,7 +35,7 @@
                 </button>
             </div>
             <div class="flex flex-col items-center p-8 w-full border-4 border-black rounded-2xl bg-gray-400 z-20 mt-[13rem]">
-                <div class="relative w-full h-12">
+                <div class="relative w-full h-16 mt-4">
                     <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2">
                         <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[150deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
                     </div>
@@ -72,9 +74,21 @@
                         <p class="text-lg font-bold text-white">{{ screens[selectedScreen].text }}</p>
                     </div>
 
+                    <div class="flex flex-wrap justify-center gap-4 mt-8">
+                        <button 
+                            v-for="(screen, index) in screens"
+                            :key="index"
+                            @click="selectScreen(index)"
+                            class="button-10 relative inline-block cursor-pointer outline-none border-0 align-middle text-inherit font-inherit font-semibold text-[#382b22] uppercase py-5 px-8 bg-[#b4bdcc] border-2 border-solid border-[#8d8d8d] rounded-xl transform transition-all duration-150 ease-in-out hover:bg-[#ebebeb] hover:translate-y-1 active:bg-[#ffe9e9] active:translate-y-3 before:absolute before:content-[''] before:w-full before:h-full before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#c4c4c4] before:rounded-inherit before:shadow-[0_0_0_2px_#828282,0_0.625em_0_0_#929292] before:translate-y-3 before:-translate-z-4 before:transition-transform before:duration-150 before:ease-in-out"
+                            role="button"
+                        >
+                            <span class="text relative z-10">Letter {{ index + 1 }}</span>
+                        </button>
+                    </div>
+
                 </div>
 
-                <div class="relative w-full h-12">
+                <div class="relative w-full h-12 mt-4">
                     <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2">
                         <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[45deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
                     </div>
@@ -89,9 +103,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 
-const answers = ['1111', '2222', '3333', '4444']
+const answers = ['1111', '1222', '0303', '4444']
 const selectedScreen = ref(0)
 const userInput = ref('')
 const buttonState = ref('')
@@ -100,6 +114,11 @@ const isError = ref(false)
 
 const hourValues = reactive([0, 0])
 const minuteValues = reactive([0, 0])
+
+const minuteTimeoutId = ref(null)
+const isHoldingMinute = ref(false)
+const isMinutePressed = ref(false)
+const holdDelay = 500
 
 const segments = [
     { id: 'a', points: "1,1 2,0 8,0 9,1 8,2 2,2" },
@@ -121,7 +140,10 @@ const digitToSegments = {
     6: ['a', 'c', 'd', 'e', 'f', 'g'],
     7: ['a', 'b', 'c'],
     8: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
-    9: ['a', 'b', 'c', 'd', 'f', 'g']
+    9: ['a', 'b', 'c', 'd', 'f', 'g'],
+    10: ['a', 'b', 'c', 'd', 'e', 'f'], // Added for 10
+    11: ['b', 'c'], // Added for 11
+    12: ['a', 'b', 'd', 'e', 'g'] // Added for 12
 }
 
 const screens = reactive([
@@ -145,7 +167,12 @@ const selectScreen = (index) => {
 const updateHour = () => {
     hourValues[1] = (hourValues[1] + 1) % 13
     if (hourValues[1] === 0) {
-        hourValues[0] = (hourValues[0] + 1) % 3
+        hourValues[1] = 1  // Skip 0, go directly to 1
+    }
+    if (hourValues[1] === 10) {
+        hourValues[0] = 1  // Set tens digit to 1 for hours 10-12
+    } else if (hourValues[1] < 10) {
+        hourValues[0] = 0  // Set tens digit to 0 for hours 1-9
     }
     updateScreens()
 }
@@ -158,13 +185,44 @@ const updateMinute = () => {
     updateScreens()
 }
 
+const startMinuteHold = () => {
+    isMinutePressed.value = true
+    isHoldingMinute.value = false
+    minuteTimeoutId.value = setTimeout(() => {
+        isHoldingMinute.value = true
+        updateMinute()
+        minuteTimeoutId.value = setTimeout(function repeat() {
+            if (isHoldingMinute.value) {
+                updateMinute()
+                minuteTimeoutId.value = setTimeout(repeat, 100)
+            }
+        }, 200)
+    }, holdDelay)
+}
+
+const stopMinuteHold = () => {
+    if (minuteTimeoutId.value) {
+        clearTimeout(minuteTimeoutId.value)
+        minuteTimeoutId.value = null
+    }
+    if (isMinutePressed.value && !isHoldingMinute.value) {
+        updateMinute() // Single increment for a quick press
+    }
+    isHoldingMinute.value = false
+    isMinutePressed.value = false
+}
+
 const updateScreens = () => {
-    screens[0].activeSegments = digitToSegments[hourValues[0]]
-    screens[1].activeSegments = digitToSegments[hourValues[1]]
-    screens[2].activeSegments = digitToSegments[minuteValues[0]]
-    screens[3].activeSegments = digitToSegments[minuteValues[1]]
-    
-    userInput.value = `${hourValues[0]}${hourValues[1]}${minuteValues[0]}${minuteValues[1]}`
+    screens[0].activeSegments = digitToSegments[hourValues[0]] || []
+    screens[1].activeSegments = digitToSegments[hourValues[1]] || []
+    screens[2].activeSegments = digitToSegments[minuteValues[0]] || []
+    screens[3].activeSegments = digitToSegments[minuteValues[1]] || []
+
+    // Format hour to ensure it's always two digits (01-12)
+    const formattedHour = hourValues[1] === 0 ? '12' : hourValues[1].toString().padStart(2, '0')
+    const formattedMinute = `${minuteValues[0]}${minuteValues[1]}`
+    userInput.value = `${formattedHour}${formattedMinute}`
+    console.log('Current time:', userInput.value)  // Debug log
 }
 
 const resetScreens = () => {
@@ -212,27 +270,39 @@ const getActivationSequence = (screenIndex) => {
             { segments: ['e', 'f'], duration: 1000 },
             { segments: ['b', 'c'], duration: 1000 },
             { segments: ['g'], duration: 1000 },
-            { segments: [], duration: 500 }
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true }, 
+            { segments: [], duration: 500, allScreens: true },
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true }, 
+            { segments: [], duration: 500, allScreens: true }
+
         ],
         [
             { segments: ['a', 'b', 'c'], duration: 1000 },
             { segments: ['d', 'e', 'f'], duration: 1000 },
             { segments: ['g'], duration: 1000 },
-            { segments: [], duration: 500 }
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true }, // All screens show 0
+            { segments: [], duration: 500, allScreens: true } // All screens blank
+
         ],
         [
             { segments: ['a', 'g'], duration: 1000 },
             { segments: ['b', 'f'], duration: 1000 },
             { segments: ['c', 'e'], duration: 1000 },
-            { segments: [], duration: 500 }
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true },
+            { segments: [], duration: 500, allScreens: true },
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true }, 
+            { segments: [], duration: 500, allScreens: true }
+
         ],
         [
             { segments: ['a', 'b', 'c', 'd'], duration: 1000 },
             { segments: ['e', 'f', 'g'], duration: 1000 },
-            { segments: [], duration: 500 }
+            { segments: ['a', 'b', 'c', 'd', 'e', 'f'], duration: 500, allScreens: true }, // All screens show 0
+            { segments: [], duration: 500, allScreens: true } // All screens blank
+
         ]
     ]
-    
+
     return sequences[screenIndex]
 }
 
@@ -243,7 +313,13 @@ const runActivationSequence = (index) => {
     const runStep = () => {
         if (currentStep < sequence.length) {
             const step = sequence[currentStep]
-            screens[index].activeSegments = step.segments
+            if (step.allScreens) {
+                screens.forEach(screen => {
+                    screen.activeSegments = [...step.segments]
+                })
+            } else {
+                screens[index].activeSegments = step.segments
+            }
             currentStep++
             setTimeout(runStep, step.duration)
         } else {
@@ -253,6 +329,13 @@ const runActivationSequence = (index) => {
 
     runStep()
 }
+
+onUnmounted(() => {
+    if (minuteTimeoutId.value) {
+        clearTimeout(minuteTimeoutId.value)
+    }
+})
+
 </script>
 
 <style scoped>
