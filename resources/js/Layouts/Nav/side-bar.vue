@@ -7,16 +7,11 @@
                         <h2 class="text-md uppercase font-bold">Chapter {{ chapter.id }}: {{ chapter.title }}</h2>
                         <ul class="ml-4">
                             <li v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="mt-2">
-                                <div v-if="puzzle.is_accessible" 
-                                     :class="puzzle.is_accessible ? 'text-black' : 'text-gray-500'" 
-                                     class="flex justify-between items-center">
-                                    <div @mouseenter="scrollToPuzzle(chapter.id, puzzle.id)">
-                                        <a v-if="puzzle.is_accessible" :href="'/puzzles/' + chapter.id + '/' + puzzle.id">
+                                <div class="flex justify-between items-center">
+                                    <div @mouseenter="scrollToPuzzle(puzzle.slug)">
+                                        <a :href="'/puzzles/' + puzzle.slug">
                                             {{ puzzle.title }}
                                         </a>
-                                        <span v-else>
-                                            {{ puzzle.title }} (Locked)
-                                        </span>
                                     </div>
                                 </div>
                             </li>
@@ -37,8 +32,8 @@ export default {
         },
     },
     methods: {
-        scrollToPuzzle(chapterId, puzzleId) {
-            const puzzleElement = document.getElementById(`puzzle-${chapterId}-${puzzleId}`);
+        scrollToPuzzle(slug) {
+            const puzzleElement = document.getElementById(`puzzle-${slug}`);
             if (puzzleElement) {
                 puzzleElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }

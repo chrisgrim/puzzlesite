@@ -19,7 +19,7 @@ Route::GET('/', [IndexController::class, 'index'])->middleware('guest');
 Route::GET('/profile', [IndexController::class, 'profile'])->middleware(['auth', CustomEnsureEmailIsVerified::class]);
 Route::GET('/enter-the-story', [LoginController::class, 'login']);
 Route::GET('/the-story', [PuzzleController::class, 'index'])->name('home');
-Route::GET('/puzzles/{chapter}/{puzzle}', [PuzzleController::class, 'show']);
+Route::get('/puzzles/{puzzle}', [PuzzleController::class, 'show']);
 
 Route::GET('/admin', [AdminController::class, 'index']);
 

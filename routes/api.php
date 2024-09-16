@@ -17,10 +17,10 @@ Route::delete('/admin/chapter', [AdminController::class, 'deleteChapter']);
 Route::put('/admin/chapters/{chapter}', [AdminController::class, 'updateChapter']);
 
 Route::post('/admin/puzzles', [AdminController::class, 'addPuzzle']);
-Route::delete('/admin/puzzles', [AdminController::class, 'deletePuzzle']);
+Route::delete('/admin/puzzles/{puzzle}', [AdminController::class, 'deletePuzzle']);
 Route::put('/admin/puzzles/{puzzle}', [AdminController::class, 'updatePuzzle']);
 
-Route::POST('/puzzles/{chapter}/{puzzle}/guess', [PuzzleController::class, 'guess'])->middleware('auth:sanctum');
+Route::POST('/puzzles/{puzzle}/guess', [PuzzleController::class, 'guess'])->middleware('auth:sanctum');
 
 
 Route::post('/create-bitcoin-order', [BitcoinController::class, 'store']);

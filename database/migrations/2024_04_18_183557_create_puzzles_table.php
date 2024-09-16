@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('chapter_id')->constrained()->onDelete('cascade');
             $table->string('title');
+            $table->string('slug', 10)->unique();
             $table->text('description');
+            $table->integer('order')->unique();
             $table->string('solution')->nullable();
             $table->integer('difficulty')->nullable();
             $table->timestamps();

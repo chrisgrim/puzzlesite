@@ -61,7 +61,7 @@ async function submitGuess() {
     }
     message.value = 'Submitting...';
     try {
-        const response = await axios.post(`/api/puzzles/${props.chapter.id}/${props.puzzle.id}/guess`, {
+        const response = await axios.post(`/api/puzzles/${props.puzzle.slug}/guess`, {
             guess: guess.value
         });
         const data = response.data;

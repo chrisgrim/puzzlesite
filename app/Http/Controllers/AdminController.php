@@ -21,11 +21,16 @@ class AdminController extends Controller
             'description' => 'required|string',
             'solution' => 'nullable|string|max:255',
             'difficulty' => 'nullable|integer',
-            'chapter_id' => 'required|exists:chapters,id'
+            'chapter_id' => 'required|exists:chapters,id',
+            'order' => 'required|integer|unique:puzzles,order'
         ]);
 
-        $puzzle = Puzzle::create($request->all());
+        $slug = strtoupper(Str::random(5));
+        while (Puzzle::where('slug', $slug)->exists()) {
+            $slug = strtoupper(Str::random(5));
+        }
 
+        $puzzle = Puzzle::create(array_merge($request->all(), ['slug' => $slug]));
         return response()->json($puzzle, 201);
     }
 
@@ -35,11 +40,11 @@ class AdminController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'solution' => 'nullable|string|max:255',
-            'difficulty' => 'nullable|integer'
+            'difficulty' => 'nullable|integer',
+            'order' => 'required|integer|unique:puzzles,order,' . $puzzle->id
         ]);
 
         $puzzle->update($request->all());
-
         return response()->json($puzzle, 200);
     }
 

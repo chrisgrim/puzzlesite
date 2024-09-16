@@ -23,6 +23,10 @@
                     <input v-model="newPuzzle.title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Title" required>
                 </div>
                 <div>
+                    <label class="block text-gray-700 font-bold mb-2" for="title">Slug</label>
+                    <input v-model="newPuzzle.slug" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Title" required>
+                </div>
+                <div>
                     <label class="block text-gray-700 font-bold mb-2" for="description">Description</label>
                     <textarea v-model="newPuzzle.description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" placeholder="Description" required></textarea>
                 </div>
@@ -58,16 +62,20 @@
                         <thead>
                             <tr class="bg-gray-200 text-gray-600 uppercase leading-normal">
                                 <th class="py-3 px-6 text-left w-1/12">Title</th>
+                                <th class="py-3 px-6 text-left w-1/12">Slug</th>
                                 <th class="py-3 px-6 text-left w-3/12">Description</th>
                                 <th class="py-3 px-6 text-left w-1/12">Solution</th>
                                 <th class="py-3 px-6 text-center w-1/12">Difficulty</th>
                                 <th class="py-3 px-6 text-center w-1/12">Actions</th>
                             </tr>
                         </thead>
-                        <tr v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr v-for="puzzle in chapter.puzzles" :key="puzzle.slug" class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
                                 {{puzzle.id}}
                                 <input v-model="puzzle.title" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
+                            </td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap w-1/12">
+                                <input v-model="puzzle.slug" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" type="text">
                             </td>
                             <td class="py-3 px-6 text-left w-2/6">
                                 <textarea v-model="puzzle.description" @change="updatePuzzle(puzzle)" class="bg-transparent focus:border-blue-500 focus:outline-none w-full" rows="2"></textarea>
@@ -96,8 +104,10 @@ import axios from 'axios';
 const newChapter = ref({ title: '' });
 const newPuzzle = ref({
     title: '',
+    slug: '',
     description: '',
     solution: '',
+    order: null,
     difficulty: null,
     chapter_id: null
 });
@@ -115,7 +125,6 @@ const fetchChapters = async () => {
 
 const addChapter = async () => {
     try {
-        // Add the new chapter with the determined order number
         await axios.post('/api/admin/chapter', { 
             ...newChapter.value,
         });
@@ -133,6 +142,7 @@ const addPuzzle = async () => {
         fetchChapters(); // Refresh the chapter list
         newPuzzle.value = {
             title: '',
+            slug: '',
             description: '',
             solution: '',
             difficulty: null,
@@ -153,7 +163,7 @@ const updateChapter = async (chapter) => {
 
 const updatePuzzle = async (puzzle) => {
     try {
-        await axios.put(`/api/admin/puzzles/${puzzle.id}`, puzzle);
+        await axios.put(`/api/admin/puzzles/${puzzle.slug}`, puzzle);
     } catch (error) {
         console.error(error);
     }
@@ -161,17 +171,12 @@ const updatePuzzle = async (puzzle) => {
 
 const deletePuzzle = async (puzzle) => {
     try {
-        await axios.delete(`/api/admin/puzzles/${puzzle.id}`);
+        await axios.delete(`/api/admin/puzzles/${puzzle.slug}`);
         fetchChapters(); // Refresh the chapter list
     } catch (error) {
         console.error(error);
     }
 };
 
-
 onMounted(fetchChapters);
 </script>
-
-<style>
-/* Add any additional styles here */
-</style>

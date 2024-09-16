@@ -1,6 +1,6 @@
 <template>
 	<div class="items-center inline-block mb-20">
-        <a class="uppercase text-xl" href="/">Chapter 1 TENOR SANS</a>
+        <a class="uppercase text-xl" href="/">{{props.puzzle.chapter.title}}</a>
 
     </div>
 

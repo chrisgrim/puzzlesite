@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('chapter_id')->default(1)->constrained();
-            $table->integer('puzzle_id')->default(0);
+            $table->integer('last_completed_puzzle_order')->default(0);
             $table->timestamps();
         });
     }

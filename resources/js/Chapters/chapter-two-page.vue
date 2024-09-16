@@ -1,52 +1,116 @@
 <template>
-    <div class="w-full flex p-8 max-w-screen-lg relative m-auto">
-        <div class="w-4/6 mt-40">
-            <div class="w-60 border-b bg-black h-1"></div>
-            <div class="my-10 mb-40">
-                <h2 class="text-9xl">Chapter {{ chapter.id }}.</h2>
+    <div class="w-full flex p-8 max-w-screen-lg relative">
+        <div class="w-[70rem]">
+            <div class="mt-40 z-10 pb-10">
+                <h1 class="text-9xl mt-20">
+                    Chapter {{ chapter.id }}: <br>{{ chapter.title }}
+                </h1>
             </div>
+            <div class="typewriter text-lg mt-96">
+                <p style="white-space: pre-wrap;">Arthur's passion for puzzles was not merely a hobby, but a reflection of his view of the world—a world where every problem held a solution, every confusion a clarifying moment, if only one could find the right solution at the right time.<br>
+                As one would expect, Author lived in a world of puzzles and endless cryptograms. His apartment was a direct reflection of his mind—organized, intricate, and full of secrets waiting to be unlocked. Each corner of his living space was meticulously curated with puzzles that ranged from the ancient and mechanical to the modern and digital, each piece carefully selected not only for its complexity but also for its beauty.
+                Walls lined with shelves displayed cryptic puzzle boxes crafted from exotic woods and metals, each bearing a history of mysteries solved and secrets contained. The tables were strewn with folded newspapers, their crosswords inked in halfway, awaiting completion. Above his desk, a large bulletin board was peppered with maps dotted with coded pins, charting unsolved mysteries and cryptic scavenger hunts that spanned the globe.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[0].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[0]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
             <div class="typewriter text-lg">
-                <p>Today, however, Author's attention was half on the puzzle and half on the morning news flickering on the small TV across his modest kitchen. The broadcast was troubling, centering not on routine city affairs but on a sudden and mysterious proliferation of graffiti that had appeared overnight across the city's walls. Intricate, cryptic sentences and symbols had been spray-painted in vibrant colors, turning the city into a canvas of unsolicited art. The contrast between the orderly black and white grid of his crossword and the colorful disarray of the world outside formed a dissonant backdrop to his morning.</p>
-                <p>As Author inked in the answers to his puzzle, the city’s teams were already out there, painting over the vibrant graffiti, erasing the unsolved mystery as quickly as it had appeared. This unprecedented response from local agencies, which under normal circumstances could take months to replace even the smallest pothole, marked a stark departure from their usual sluggish pace.</p>
-                <p>The usual bureaucratic lethargy, characterized by endless paperwork and interdepartmental wrangling, had vanished overnight, replaced by a swift, almost alarmist efficiency. Trucks and crews, usually a rare sight except in the aftermath of public outcry or media scrutiny, were now conspicuously present at every tagged site. High-powered sprayers erased the sprayed-on text before the paint had a chance to settle into the bricks and mortar of the city’s infrastructure.</p>
-                <p>As Author watched the cleanup operation unfold, he paused the television on a brief shot that managed to slip through the otherwise tightly controlled news coverage. Behind a row of police officers, who stood guarding the scene as if the graffiti were a crime scene, the vibrant hues of the graffiti were just visible. What the hurried sweep of the camera caught was a wall painted with elaborate, swirling patterns that seemed random to the untrained eye. But to Author, a man who had dedicated countless hours to unraveling the most complex of puzzles, the configuration struck a familiar chord.</p>
-                {{ displayText }}
-                <span class="cursor">|</span>
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
             </div>
-            
-            <div v-for="puzzle in chapter.puzzles" :key="puzzle.id" class="relative min-h-28">
-                <div class="flex absolute w-full">
-                    <div :class="puzzle.is_accessible ? 'bg-stone-300' : 'bg-gray-300'" class="p-4 flex items-center mt-4 w-[60rem] ml-[-30rem]">
-                        <a v-if="puzzle.is_accessible" class="h-full flex items-center uppercase ml-[30rem]" :href="'/puzzles/' + chapter.id + '/' + puzzle.order">
-                            <span class="text-5xl mr-10">{{ puzzle.order < 10 ? '0' + puzzle.order : puzzle.order }}.</span>
-                            <span class="font-source text-lg">{{ puzzle.title }}</span>
-                        </a>
-                        <div v-else class="h-full flex items-center uppercase ml-[30rem]">
-                            <span class="text-5xl mr-10">{{ puzzle.order < 10 ? '0' + puzzle.order : puzzle.order }}.</span>
-                            <span class="font-source text-lg">{{ puzzle.title }}</span>
-                            <span class="text-red-500 ml-4">(Locked)</span>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[1].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[1]" 
+                    :chapterId="chapter.id"
+                />
             </div>
+
+            <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[2].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[2]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
+            <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[3].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[3]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
+            <div class="typewriter text-lg">
+                <p>Author's mornings began in this sanctuary, precisely at 6:45 AM when the soft melody of a custom-made puzzle alarm clock filled the room. The clock, a marvel of engineering festooned with enigmatic symbols, required a daily solution to silence its waking call. Each morning, Author decoded a sequence intricately designed into the mechanics of the clock, aligning gears and deciphering patterns that mirrored the complexity of his own thoughts.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+
+            <div class="relative">
+                <div :id="`puzzle-${chapter.id}-${chapter.puzzles[4].id}`" class="absolute top-[14rem]"></div>
+                <PuzzleItem 
+                    :puzzle="chapter.puzzles[4]" 
+                    :chapterId="chapter.id"
+                />
+            </div>
+
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        chapter: {
-            type: Object,
-            required: true,
-        },
+<script setup>
+import { defineProps } from 'vue';
+import PuzzleItem from '@/Global/puzzleItem.vue';
+
+const props = defineProps({
+    chapter: {
+        type: Object,
+        required: true,
     },
-    setup(props) {
-        return {
-            chapter: props.chapter,
-        };
-    },
-};
+});
 </script>
 
 <style>

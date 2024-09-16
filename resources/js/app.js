@@ -8,19 +8,7 @@ const NavBar = defineAsyncComponent(() => import('./Layouts/Nav/nav-bar.vue'));
 const SideBar = defineAsyncComponent(() => import('./Layouts/Nav/side-bar.vue'));
 const Home = defineAsyncComponent(() => import('./Layouts/home.vue'));
 
-const ChapterOne = defineAsyncComponent(() => import('./Chapters/chapter-one-page.vue'));
-const PuzzleOneOne = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-1-page.vue'));
-const PuzzleOneTwo = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-2-page.vue'));
-const PuzzleOneThree = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-3-page.vue'));
-const PuzzleOneFour = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-4-page.vue'));
-const PuzzleOneFive = defineAsyncComponent(() => import('./Chapters/ChapterOne/puzzle-5-page.vue'));
 
-const ChapterTwo = defineAsyncComponent(() => import('./Chapters/chapter-two-page.vue'));
-const PuzzleTwoOne = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-1-page.vue'));
-const PuzzleTwoTwo = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-2-page.vue'));
-const PuzzleTwoThree = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-3-page.vue'));
-const PuzzleTwoFour = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-4-page.vue'));
-const PuzzleTwoFive = defineAsyncComponent(() => import('./Chapters/ChapterTwo/puzzle-5-page.vue'));
 
 
 const Login = defineAsyncComponent(() => import('./Auth/login.vue'));
@@ -51,20 +39,6 @@ app.component('nav-bar', NavBar);
 app.component('side-bar', SideBar);
 app.component('home', Home);
 
-app.component('chapter-1', ChapterOne);
-app.component('puzzle-1-1', PuzzleOneOne);
-app.component('puzzle-1-2', PuzzleOneTwo);
-app.component('puzzle-1-3', PuzzleOneThree);
-app.component('puzzle-1-4', PuzzleOneFour);
-app.component('puzzle-1-5', PuzzleOneFive);
-
-app.component('chapter-2', ChapterTwo);
-app.component('puzzle-2-1', PuzzleTwoOne);
-app.component('puzzle-2-2', PuzzleTwoTwo);
-app.component('puzzle-2-3', PuzzleTwoThree);
-app.component('puzzle-2-4', PuzzleTwoFour);
-app.component('puzzle-2-5', PuzzleTwoFive);
-
 app.component('login', Login);
 app.component('profile', Profile);
 app.component('purchase', Purchase);
@@ -73,6 +47,16 @@ app.component('email-verify', EmailVerify);
 
 app.component('admin', Admin);
 
+const puzzleComponentContext = import.meta.glob('./Chapters/**/*.vue');
+
+for (const path in puzzleComponentContext) {
+    const fileName = path.split('/').pop();
+    const slugMatch = fileName.match(/puzzle-(.+)\.vue$/);
+    if (slugMatch) {
+        const slug = slugMatch[1];
+        app.component(`puzzle-${slug}`, defineAsyncComponent(puzzleComponentContext[path]));
+    }
+}
 
 
 app.mount('#app');
