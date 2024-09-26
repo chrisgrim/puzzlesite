@@ -5,15 +5,17 @@
         <Header :puzzle="props.puzzle" />
 
         <div class="mt-14" style="white-space: pre-wrap;">
-            <p>The heart of this puzzle was a collection of ten hexagonal "tablets," meticulously crafted to mimic ancient stone fragments. These pieces, fixed firmly in place, added an intriguing twist to the challenge. Each tablet face bore visible letter engravings, spelling out either "FLOWER" or "PETALS" in various arrangements. Arthur's keen eye had already noted this pattern, but he sensed the true enigma lay hidden beneath—in the unseen undersides of these immovable artifacts.</p>
-            <p>Centered among these stone-like hexagons sat two circular discs, one slightly smaller and perched atop the other. Their edges hinted at the possibility of rotation and alignment, a tantalizing mechanic begging to be explored. Completing this archaeological tableau was a small slate bearing nine seemingly random letters, its purpose yet another riddle to unravel.
+            <p>Arthur's mornings began with a puzzle, courtesy of his sleek yet intricate alarm clock. To silence its melody, he had to navigate through four "radio stations", then enter each station’s answer using the hour and minute buttons. Once he correctly solved every station’s puzzle, he would then have to determine the final word needed to quiet the alarm.
             </p>
-
-            <div class="w-full mt-14 h-2 bg-black"></div>
-            <p>Two parter. First part the user has to figure out that the bottom of the artifacts spell out WATERFOWL. Then they have to rotate the two discs so that the Flower Petal Icon lines up with the WATERFOWL</p>
-            <h2 class="mt-10">Answer: APPROACHING</h2>
+            <p>For Arthur, it was the perfect way to wake up—a gentle blend of challenge and clarity that set the tone for the day ahead.
+            </p>
         </div>
 
+<!--         <div>
+            <audio ref="audioPlayer" src="/images/Chapter1/Alarm_Clock_Music.mp3"></audio>
+            <button ref="playButton" @click="playAudio" style="display: none;">Play Audio</button>
+        </div>
+ -->
         <!-- Puzzle Section -->
         <div id="puzzle" class="puzzle flex flex-row items-center justify-center py-16">
             <Puzzle></Puzzle>
@@ -34,7 +36,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './puzzle-KCAFT-component.vue';
+import Puzzle from './component-alarm-clock.vue';
 
 const props = defineProps({
     user: Object,
@@ -42,5 +44,7 @@ const props = defineProps({
     chapter: Object,
     solution: Object,
 });
+
+
 
 </script>

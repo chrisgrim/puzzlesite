@@ -4,7 +4,7 @@
         @yield('meta')
 		@include('Layouts.meta')
 	</head>
-	<body id="app" class="bg-stone-200">
+	<body id="app" class="bg-[#f8f9f4]">
         <header id="header">
             @yield('nav')
         </header>

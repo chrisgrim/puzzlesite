@@ -1,26 +1,22 @@
 <template>
     <div class="max-w-screen-lg m-auto my-24 p-8">
-
-        <!-- Header Section -->
+        
+        <!-- Header Sectioin -->
         <Header :puzzle="props.puzzle" />
 
         <div class="mt-14" style="white-space: pre-wrap;">
-            <p>Arthur sat at his kitchen table, sipping his morning tea as he unfolded the newspaper. His eyes lingered on a familiar puzzle type that had quickly become a new favorite. This challenge, unlike the standard crosswords he was so accustomed to, required him to find the common thread between three seemingly unrelated words. The puzzle presented nine words in total, broken into three sets of three. His task was to identify the single word that linked each set. It was a game of patterns and associations, a perfect mental exercise to accompany his breakfast.</p>
+            <p>To the casual observer, the artwork appeared to simply be a geeky motivational poster. Arthur would often lean back from his work to sympathize with the cat drawn in Ascii art, which struggled to hang on to an Ascii tree limb. 
+            </p>
+            <p>Arthur took quiet pleasure in the fact that not a single colleague (other than Harold) had yet discerned the poster's true nature—a cipher puzzle hidden in plain view.
+            </p>
 
-            <p>As Arthur worked his way through the puzzle, he appreciated the subtle complexity. What seemed random at first often revealed an elegant connection once he took the time to consider each set carefully. After solving the first three sets, he found himself, as always, trying to anticipate the overall structure. Though each individual word had its own solution, Arthur knew there was often something more hidden in the puzzle, some deeper layer connecting everything. He enjoyed this type of challenge, one that echoed his view of the world—that if you looked closely enough, you could always find the connection that brought everything together.</p>
-
-            <div class="w-full h-2 bg-black"></div>
-            <p>Puzzle needs a second layer</p>
-            <h2 class="mt-14">Answer: BRING</h2>
         </div>
 
         <!-- Puzzle Section -->
-        <div id="puzzle" class="puzzle">
-            <p>Long Puzzle. Vin Tenn but 5 times. Then the answer is the first letter of each Ven Tenn.</p>
+        <div id="puzzle" class="puzzle flex flex-row items-center justify-center py-16">
             <Puzzle></Puzzle>
         </div>
 
-        <!-- Submission Section -->
         <SubmissionSection 
             :question="'What was hidden in the shapes?'"
             :solution="props.solution" 
@@ -30,12 +26,11 @@
     </div>
 </template>
 
-
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './puzzle-QRSTU-component.vue';
+import Puzzle from './puzzle-motivational-poster-component.vue';
 
 const props = defineProps({
     user: Object,
@@ -44,5 +39,132 @@ const props = defineProps({
     solution: Object,
 });
 
+const grid = ref([]);
+const userPosition = reactive({ x: 0, y: 0 });
+const gridSize = ref(6);
+const isRotating = ref(false);
+const initialAngle = ref(0);
+const currentRotationDegrees = ref(0);
+const lastSnapRotation = ref(0);
+let gridElement = null;
 
+const initializeGrid = () => {
+    grid.value = Array.from({ length: gridSize.value }, () =>
+        Array.from({ length: gridSize.value }, () => ({
+            isPath: Math.random() > 0.5,
+            isUser: false,
+            isStar: false
+        }))
+    );
+};
+
+const placeUser = () => {
+    userPosition.x = Math.floor(gridSize.value / 2);
+    userPosition.y = Math.floor(gridSize.value / 2);
+    grid.value[userPosition.y][userPosition.x].isUser = true;
+};
+
+const placeStar = () => {
+    let starPosition = { x: gridSize.value - 1, y: gridSize.value - 1 };
+    grid.value[starPosition.y][starPosition.x].isStar = true;
+};
+
+const startRotation = (event) => {
+    if (!isRotating.value) {
+        isRotating.value = true;
+        initialAngle.value = getMouseAngle(event);
+        currentRotationDegrees.value = lastSnapRotation.value;
+    }
+};
+
+const handleMouseMove = (event) => {
+    if (isRotating.value) {
+        let currentAngle = getMouseAngle(event);
+        let angleDelta = currentAngle - initialAngle.value;
+        currentRotationDegrees.value += angleDelta;
+        initialAngle.value = currentAngle;
+        gridElement.style.transform = `rotate(${currentRotationDegrees.value}deg)`;
+    }
+};
+
+const stopRotation = () => {
+    if (isRotating.value) {
+        isRotating.value = false;
+        let snapAngle = Math.round(currentRotationDegrees.value / 90) * 90;
+        gridElement.style.transform = `rotate(${snapAngle}deg)`;
+        applyRotation(snapAngle);
+        lastSnapRotation.value = snapAngle;
+        currentRotationDegrees.value = snapAngle;
+    }
+};
+
+const getMouseAngle = (event) => {
+    let rect = gridElement.getBoundingClientRect();
+    let centerX = rect.left + rect.width / 2;
+    let centerY = rect.top + rect.height / 2;
+    let deltaX = event.clientX - centerX;
+    let deltaY = event.clientY - centerY;
+    return Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+};
+
+const applyRotation = (angle) => {
+    let numRotations = ((angle / 90) % 4 + 4) % 4;
+    for (let i = 0; i < numRotations; i++) {
+        rotateGrid();
+    }
+};
+
+const rotateGrid = () => {
+    let newGrid = [];
+    for (let col = 0; col < gridSize.value; col++) {
+        newGrid.push([]);
+        for (let row = gridSize.value - 1; row >= 0; row--) {
+            newGrid[col].push({ ...grid.value[row][col] });
+        }
+    }
+    grid.value = newGrid;
+    updateUserPositionAfterRotation();
+};
+
+const updateUserPositionAfterRotation = () => {
+    grid.value[userPosition.y][userPosition.x].isUser = false;
+    let newUserPosition = {
+        x: userPosition.y,
+        y: gridSize.value - 1 - userPosition.x
+    };
+    userPosition.x = newUserPosition.x;
+    userPosition.y = newUserPosition.y;
+    grid.value[userPosition.y][userPosition.x].isUser = true;
+};
+
+onMounted(() => {
+    initializeGrid();
+    placeUser();
+    placeStar();
+    gridElement = document.querySelector('.grid');
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', stopRotation);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', stopRotation);
+});
 </script>
+
+<style>
+.cursor {
+    animation: blink 1s infinite step-start;
+}
+
+@keyframes blink {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    50.01%,
+    100% {
+        opacity: 0;
+    }
+}
+</style>

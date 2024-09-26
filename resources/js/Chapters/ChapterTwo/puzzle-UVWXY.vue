@@ -34,7 +34,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './puzzle-UVWXY-component.vue';
+import Puzzle from './component-busker.vue';
 
 const props = defineProps({
     user: Object,

@@ -1,57 +1,47 @@
 <template>
-    <div class="w-full flex flex-row items-center" :class="[isShaking ? 'shake' : '']">
-        <div class="w-6 border-l-4 border-t-4 border-b-4 border-black h-40 rounded-2xl bg-gray-400" />
-        <div class="w-full relative">
-            <div class="trapezoidal-button h-[10rem] w-[calc(100%-1rem)] mx-auto justify-center gap-20 items-center flex bg-gray-500 rounded-2xl z-10 border-black border-4 absolute left-2 right-2">
+    <div class="w-full flex flex-row" :class="[isShaking ? 'shake' : '']">
+        <div 
+            class="w-full relative h-[47rem] bg-[url('/images/Chapter1/Alarm_Clock_Background.jpg')] bg-[length:110%_auto] bg-[right_1rem_center] bg-no-repeat">
+            <div class="w-full justify-center flex mt-[6rem]">
                 <button 
                     @mousedown="startHourHold"
                     @mouseup="stopHourHold"
                     @mouseleave="stopHourHold"
-                    class="button-10 h-20 relative inline-block cursor-pointer outline-none border-0 align-middle text-inherit font-inherit font-semibold text-[#382b22] uppercase py-5 px-8 bg-white border-2 border-solid border-[#8d8d8d] rounded-xl transform transition-all duration-150 ease-in-out hover:bg-[#ebebeb] hover:translate-y-1 active:bg-[#ffe9e9] active:translate-y-3 before:absolute before:content-[''] before:w-full before:h-full before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#c4c4c4] before:rounded-inherit before:shadow-[0_0_0_2px_#828282,0_0.625em_0_0_#929292] before:translate-y-3 before:-translate-z-4 before:transition-transform before:duration-150 before:ease-in-out"
-                    role="button"
-                >
-                    <span class="text relative z-10">Hour</span>
+                    class="button-10 w-32 h-20 ml-[-11rem] relative inline-block bg-[url('/images/Chapter1/Alarm_Clock_Hour_Up.png')] bg-cover bg-center transition-all duration-200"
+                    :class="{ 'bg-[url(/images/Chapter1/Alarm_Clock_Hour_Down.png)]': isHourPressed }"
+                    role="button">
                 </button>
                 <button 
                     @mousedown="startMinuteHold"
                     @mouseup="stopMinuteHold"
                     @mouseleave="stopMinuteHold"
-                    class="button-10 h-20 relative inline-block cursor-pointer outline-none border-0 align-middle text-inherit font-inherit font-semibold text-[#382b22] uppercase py-5 px-8 bg-white border-2 border-solid border-[#8d8d8d] rounded-xl transform transition-all duration-150 ease-in-out hover:bg-[#ebebeb] hover:translate-y-1 active:bg-[#ffe9e9] active:translate-y-3 before:absolute before:content-[''] before:w-full before:h-full before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#c4c4c4] before:rounded-inherit before:shadow-[0_0_0_2px_#828282,0_0.625em_0_0_#929292] before:translate-y-3 before:-translate-z-4 before:transition-transform before:duration-150 before:ease-in-out"
-                    role="button"
-                >
-                    <span class="text relative z-10">Minute</span>
+                    class="button-10 w-32 h-20 relative inline-block bg-[url('/images/Chapter1/Alarm_Clock_Minute_Up.png')] bg-cover bg-center transition-all duration-200"
+                    :class="{ 'bg-[url(/images/Chapter1/Alarm_Clock_Minute_Down.png)]': isMinutePressed }"
+                    role="button">
                 </button>
                 <button 
                     @click="checkAnswer"
-                    class="button-10 h-20 relative inline-block cursor-pointer outline-none border-0 align-middle text-inherit font-inherit font-semibold text-[#382b22] uppercase py-5 px-8 bg-white border-2 border-solid border-[#8d8d8d] rounded-xl transform transition-all duration-150 ease-in-out hover:bg-[#ebebeb] hover:translate-y-1 active:bg-[#ffe9e9] active:translate-y-3 before:absolute before:content-[''] before:w-full before:h-full before:top-0 before:left-0 before:right-0 before:bottom-0 before:bg-[#c4c4c4] before:rounded-inherit before:shadow-[0_0_0_2px_#828282,0_0.625em_0_0_#929292] before:translate-y-3 before:-translate-z-4 before:transition-transform before:duration-150 before:ease-in-out"
-                    role="button"
-                >
-                    <span class="text relative z-10">Submit</span>
+                    class="button-10 w-32 h-20 ml-12 relative inline-block bg-[url('/images/Chapter1/Alarm_Clock_Submit_Up.png')] bg-cover bg-center transition-all duration-200"
+                    :class="{ 'bg-[url(/images/Chapter1/Alarm_Clock_Submit_Down.png)]': isMinutePressed }"
+                    role="button">
                 </button>
             </div>
-            <div class="flex flex-col items-center p-8 w-full border-4 border-black rounded-2xl bg-gray-400 z-20 mt-[9rem]">
-                <div class="relative w-full h-16 mt-4">
-                    <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2">
-                        <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[150deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
-                    </div>
-                    <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2 right-0">
-                        <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[120deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
-                    </div>
-                </div>
+             
+            <div class="flex flex-col items-center p-8 w-full z-20">
 
 
-                <div class="w-full px-16">
-                    <div class="flex w-full mb-4 bg-gray-800 shadow-[inset_0_10px_1px_3px_rgba(0,0,0,0.5)] rounded-2xl px-8 justify-center items-center">
+                <div class="relative w-[38rem] mt-[4rem] ml-[-10rem] px-16 flex flex-col justify-end">
+                    <div class="relative flex w-full h-40 justify-center items-center">
                         <template v-for="display in displays" :key="display.id">
                             <div 
-                                class="w-40 h-60 mt-2 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 cursor-pointer screen-element"
+                                class="w-20 h-36 mt-2 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 cursor-pointer screen-element"
                                 :class="[
                                     selectedDisplay === display.id ? 'border-blue-500' : 'border-black',
                                     { 'pointer-events-none': isBusy }
                                 ]"
                                 @click="selectDisplay(display.id)"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="240" viewBox="-1 -1 12 20" stroke="#19202b" stroke-width=".25">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="45" height="80" viewBox="-1 -1 12 20" stroke="#c0a7a3" stroke-width=".25">
                                     <polygon v-for="segment in segments" :key="segment.id" 
                                             :id="segment.id" 
                                             :points="segment.points" 
@@ -60,91 +50,79 @@
                                 </svg>
                             </div>
                             <!-- Vertical dots between hour and minute -->
-                            <div v-if="display.id === 1" class="flex flex-col justify-center h-80 mx-4 gap-16">
-                                <div class="w-6 h-6 bg-[#F00] rounded-full mb-2"></div>
-                                <div class="w-6 h-6 bg-[#F00] rounded-full"></div>
+                            <div v-if="display.id === 1" class="flex flex-col justify-center h-40 mx-4 gap-6">
+                                <div class="w-3 h-3 bg-[#2b1d1d] rounded-full mb-2"></div>
+                                <div class="w-3 h-3 bg-[#2b1d1d] rounded-full"></div>
                             </div>
                         </template>
                     </div>
 
                     <!-- Text display for each screen -->
-                    <div class="w-full h-40 bg-gray-800 rounded-2xl p-4 mt-12 shadow-[inset_0_8px_1px_1px_rgba(0,0,0,0.5)]">
-                        <p class="text-lg font-bold text-white">
-                            <span v-html="puzzles[selectedPuzzle].text"></span>
-                        </p>
+                    <div class="w-full h-20 p-6 flex select-none">
+                        <div>
+                            <p class="text-md m-0 w-[6rem]">Puzzle {{selectedPuzzle + 1}}:</p>
+                        </div>
+                        <div>
+                            <p class="text-lg mt-0 font-mono">
+                                <span v-html="puzzles[selectedPuzzle].text"></span>
+                            </p>
+                        </div>     
                     </div>
 
-                    <div class="flex items-center mt-8">
-                        <!-- Dial -->
-                        <div class="flex-shrink-0 relative w-32 h-32 cursor-pointer" @click="handleRotate">
-                            <div
-                                class="absolute w-full h-full bg-gray-600 rounded-full shadow-[inset_-2px_2px_0px_rgba(255,255,255,0.1),inset_2px_-2px_0px_rgba(17,17,17,0.2),-5px_5px_5px_#111,-10px_10px_10px_-5px_#111,-20px_20px_20px_-10px_#111,-25px_25px_25px_-10px_#111]"
-                            >
-                                <!-- Rotating Handle -->
-                                <div
-                                    class="absolute top-1/2 left-3/4 w-1/4 h-1 bg-white rounded transform -translate-y-1/2 origin-[calc(-100%)_50%] shadow-[1px_-1px_0px_rgba(17,17,17,0.2)]"
-                                    :style="{ transform: `rotate(${rotation}deg) translateY(-50%)` }"
-                                ></div>
-                            </div>
-                            <!-- Numbers around the dial -->
-                            <div
-                                v-for="(number, index) in [1, 2, 3, 4]"
-                                :key="number"
-                                class="absolute w-8 h-8 flex items-center justify-center text-black font-bold"
-                                :style="getNumberPosition(index)"
-                            >
-                                {{ number }}
-                            </div>
-                        </div>
+                    <!-- Dial -->
+                    <div 
+                        class="absolute right-[-6.8rem] top-[6.7rem] flex-shrink-0 w-44 h-44 cursor-pointer"
+                        @click="handleRotate">
+                        <div
+                            class="w-full h-full bg-[url('/images/Chapter1/Alarm_Clock_Dial.png')] bg-cover bg-center transition-transform duration-300 ease-in-out"
+                            :style="{ transform: `rotate(${rotation}deg)` }"
+                        ></div>
+                    </div>
+
                         
-                        <!-- Indicator -->
-                        <div class="w-full flex justify-center items-center gap-8">
-                            <div v-for="(puzzle, index) in puzzles" :key="index"
-                                 class="relative w-10 h-10 rounded-full transition-all duration-300 shadow-md"
-                                 :class="[
-                                    'bg-gradient-to-br from-gray-100 to-gray-300',
-                                    selectedPuzzle === index ? 'ring-4 ring-yellow-300 ring-opacity-50' : '',
-                                    puzzle.completed ? '!ring-4 !ring-green-300 !ring-opacity-50' : '',
-                                 ]"
-                            >
-                                <!-- Inner highlight -->
-                                <div class="absolute inset-1 bg-gradient-to-br from-white to-transparent rounded-full opacity-75"></div>
-                                
-                                <!-- Glow effect -->
-                                <div class="absolute -inset-2 rounded-full blur-md transition-opacity duration-300"
-                                     :class="[
-                                        selectedPuzzle === index ? 'bg-yellow-200 opacity-75' : 'opacity-0',
-                                        puzzle.completed ? '!bg-green-200 !opacity-75' : '',
-                                     ]"
-                                ></div>
-                                
-                                <!-- Reflection -->
-                                <div class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full opacity-75"></div>
-                            </div>
+                    
+                    <!-- Indicator -->
+                     <div class="absolute right-[-5.5rem] top-0 w-32 flex justify-center items-center gap-2">
+                        <div v-for="(puzzle, index) in puzzles" :key="index"
+                            class="relative w-7 h-7">
+                            <!-- New div for glow effect -->
+                            <div
+                                class="absolute inset-[-1px] rounded-full blur-[4px] z-10"
+                                :class="{
+                                    'bg-[#ff0000]': !puzzle.completed && isShaking && selectedPuzzle === index,
+                                    'bg-[#f3b337]': !puzzle.completed && !isShaking && selectedPuzzle === index,
+                                    'bg-green-500': puzzle.completed && selectedPuzzle === index,
+                                    'opacity-0': selectedPuzzle !== index
+                                }"
+                            ></div>
+                            <!-- Colored background div -->
+                            <div
+                                class="absolute inset-1 rounded-full z-20"
+                                :class="{
+                                    'bg-[#10ff68]': puzzle.completed && selectedPuzzle === index,
+                                    'bg-[#ff4b4b]': !puzzle.completed && isShaking && selectedPuzzle === index,
+                                    'bg-[#f9c216]': !puzzle.completed && !isShaking && selectedPuzzle === index,
+                                    'bg-[#22c55e]': puzzle.completed && selectedPuzzle !== index,
+                                    'bg-transparent': !puzzle.completed && selectedPuzzle !== index
+                                }"
+                            ></div>
+                            <!-- Existing div for the light image with multiply effect -->
+                            <div
+                                class="absolute inset-0 bg-cover bg-center rounded-full z-30 mix-blend-multiply"
+                                style="background-image: url('/images/Chapter1/Alarm_Clock_Light.png');"
+                            ></div>
                         </div>
                     </div>
-
-                    
-
                 </div>
 
-                <div class="relative w-full h-12 mt-4">
-                    <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2">
-                        <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[45deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
-                    </div>
-                    <div class="screw absolute w-12 h-12 rounded-full border-[#3e3e3e] shadow-[0px_4px_0px_1px_rgba(0,0,0,0.5)] border-2 right-0">
-                        <div class="indent h-3 w-[2.9rem] mt-4 bg-[url('img/nail-head.jpg')] shadow-[inset_0px_1px_8px_#222] rotate-[10deg] rounded-[2px] -ml-[2px] border-b border-solid border-[rgba(255,255,255,0.3)]"/>
-                    </div>
-                </div>
+               
             </div>
         </div>
-        <div class="w-6 border-r-4 border-t-4 border-b-4 border-black h-40 rounded-2xl bg-gray-400" />
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
-import { Jupiter, Earth, Saturn } from './planets.js';
 
 const selectedPuzzle = ref(0)
 const selectedDisplay = ref(null)
@@ -170,9 +148,9 @@ const isHoldingMinute = ref(false)
 const isMinutePressed = ref(false)
 const holdDelay = 500
 
-const rotation = ref(-30);
+const rotation = ref(-40);
 
-const angles = [-30, 0, 30, 60];
+const angles = [-40, -15, 15, 40];
 
 const segments = [
     { id: 'a', points: "1,1 2,0 8,0 9,1 8,2 2,2" },
@@ -208,8 +186,8 @@ const handleRotate = () => {
     // Calculate the puzzle ID based on the current rotation index
     const puzzleId = currentRotationIndex;
     
-    // Select the corresponding puzzle
-    selectPuzzle(puzzleId);
+    // Select the corresponding puzzle without running the activation sequence
+    selectPuzzle(puzzleId, false);
 };
 
 const getNumberPosition = (index) => {
@@ -226,16 +204,17 @@ const getNumberPosition = (index) => {
 };
 
 const puzzles = reactive([
-    { id: 0, completed: false, text: 'She ate nothing for lunch too.', answer: '8042' },
+    { id: 0, completed: false, text: 'She too ate nothing for lunch.', answer: '2804' },
     { id: 1, completed: false, text: `
-        <div style="display: flex; align-items: center; gap: 2%;">
-            ${Saturn}
-            ${Jupiter}
-            ${Earth}
+        <div style="display: flex; gap: 3%; align-items: center;">
+            <img src="/images/Chapter1/Planet1.png" alt="Saturn" style="width: 30px; height: 30px;" />
+            <img src="/images/Chapter1/Planet2.png" alt="Jupiter" style="width: 44px; height: 30px;" />
+            <img src="/images/Chapter1/Planet3.png" alt="Earth" style="width: 30px; height: 30px;" />
+            <img src="/images/Chapter1/Planet4.png" alt="Earth" style="width: 56px; height: 30px;" />
         </div>
-    `, answer: '1111' },
-    { id: 2, completed: false, text: 'Jump on a phone', answer: '5867' },
-    { id: 3, completed: false, text: 'If ▲ = ►, and N = Z, then _ m ∞ <span style="display:inline-block; transform:rotate(-90deg);">7</span>', answer: '1387' },
+    `, answer: '4736' },
+    { id: 2, completed: false, text: 'JUMP on a phone', answer: '5867' },
+    { id: 3, completed: false, text: 'If ▲ = ►, and N = Z,<br> then _ m ∞ <span style="display:inline-block; transform:rotate(90deg);">∟</span> = ?', answer: '1387' },
 ])
 
 const displays = reactive([
@@ -251,7 +230,7 @@ const buttonClass = computed(() => {
     return 'bg-blue-500 text-white'
 })
 
-const selectPuzzle = async (id) => {
+const selectPuzzle = async (id, runSequence = true) => {
     if (isBusy.value) return;
     
     isBusy.value = true;
@@ -259,14 +238,8 @@ const selectPuzzle = async (id) => {
     isError.value = false;
     
     if (puzzles[id].completed) {
-        displays.forEach((display) => {
-            display.activeSegments = [];
-            display.value = 0;
-        });
-
-        await runActivationSequence(id);
+        setSolvedSequence(id)
     } else {
-        // Ensure hour and minute values are reset properly
         resetDisplays();
     }
 
@@ -275,6 +248,7 @@ const selectPuzzle = async (id) => {
 
 
 const selectDisplay = (id) => {
+    if (puzzles[selectedPuzzle.value].completed) return;
     selectedDisplay.value = id
     isError.value = false
 
@@ -388,6 +362,7 @@ const updateHour = () => {
 }
 
 const startHourHold = () => {
+    if (puzzles[selectedPuzzle.value].completed) return;
     isHourPressed.value = true
     isHoldingHour.value = false
     hourTimeoutId.value = setTimeout(() => {
@@ -417,7 +392,7 @@ const stopHourHold = () => {
 const updateMinute = () => {
     minuteValues[1] = (minuteValues[1] + 1) % 10;
     if (minuteValues[1] === 0) {
-        minuteValues[0] = (minuteValues[0] + 1) % 6;
+        minuteValues[0] = (minuteValues[0] + 1) % 10; // Changed from % 6 to % 10
     }
 
     // Check for NaN and reset if necessary
@@ -427,8 +402,8 @@ const updateMinute = () => {
     updateDisplays();
 }
 
-
 const startMinuteHold = () => {
+    if (puzzles[selectedPuzzle.value].completed) return;
     isMinutePressed.value = true
     isHoldingMinute.value = false
     minuteTimeoutId.value = setTimeout(() => {
@@ -491,14 +466,11 @@ const checkAnswer = async () => {
             buttonState.value = ''
         }, 1000)
 
-        // Make all screens except the one at puzzle index go black
-        displays.forEach((display, index) => {
-            if (index !== selectedPuzzle.value) {
-                display.activeSegments = []
-            }
-        })
-
-        await runActivationSequence(selectedPuzzle.value)
+        // Set the solved sequence as the default display
+        setSolvedSequence(selectedPuzzle.value)
+    } else if (currentPuzzle.completed) {
+        // If the puzzle is already completed, just show the solved sequence
+        setSolvedSequence(selectedPuzzle.value)
     } else {
         buttonState.value = 'incorrect'
         isError.value = true
@@ -510,37 +482,29 @@ const checkAnswer = async () => {
         }, 500))
     }
     
-    if (puzzles.every(puzzle => puzzle.completed)) {
-        alert('Congratulations! You completed all puzzles!')
-    }
-    
     isBusy.value = false
+}
+
+const setSolvedSequence = (index) => {
+    const sequence = getActivationSequence(index)[0]
+    displays.forEach((display, displayIndex) => {
+        display.activeSegments = sequence.segments[displayIndex] || []
+    })
 }
 
 const getActivationSequence = (screenIndex) => {
     const sequences = [
         [
-            { segments: ['e', 'f'], duration: 1000 },
-            { segments: ['b', 'c'], duration: 1000 },
-            { segments: ['g'], duration: 1000 },
-
+            { segments: [['b', 'c'], ['e', 'c'], ['b', 'f'], ['g']], duration: 2000 }
         ],
         [
-            { segments: ['a', 'b', 'c'], duration: 1000 },
-            { segments: ['d', 'e', 'f'], duration: 1000 },
-            { segments: ['g'], duration: 1000 },
-
+            { segments: [['e'], ['g'], ['c'], ['f', 'c']], duration: 2000 }
         ],
         [
-            { segments: ['a', 'g'], duration: 1000 },
-            { segments: ['b', 'f'], duration: 1000 },
-            { segments: ['c', 'e'], duration: 1000 },
-
+            { segments: [['g'], ['a', 'f'], ['g'], ['a']], duration: 2000 }
         ],
         [
-            { segments: ['a', 'b', 'c', 'd'], duration: 1000 },
-            { segments: ['e', 'f', 'g'], duration: 1000 },
-
+            { segments: [['d'], ['b'], ['d'], ['d']], duration: 2000 }
         ]
     ]
 
@@ -557,13 +521,10 @@ const runActivationSequence = (index, isCompleted = false) => {
     const runStep = () => {
         if (currentStep < sequence.length) {
             const step = sequence[currentStep]
-            if (step.allScreens) {
-                displays.forEach((display, displayIndex) => {
-                    display.activeSegments = [...step.segments]
-                })
-            } else {
-                displays[index].activeSegments = step.segments
-            }
+            displays.forEach((display, displayIndex) => {
+                // Activate specified segments for each display
+                display.activeSegments = step.segments[displayIndex] || []
+            })
             currentStep++
             setTimeout(runStep, step.duration)
         } else {
@@ -584,10 +545,30 @@ const runActivationSequence = (index, isCompleted = false) => {
     runStep()
 }
 
+const setInitialDisplay = (hours, minutes) => {
+    hourValues[0] = Math.floor(hours / 10);
+    hourValues[1] = hours % 10;
+    minuteValues[0] = Math.floor(minutes / 10);
+    minuteValues[1] = minutes % 10;
+    
+    displays.forEach((display, index) => {
+        if (index < 2) {
+            display.value = hourValues[index];
+            display.activeSegments = digitToSegments[hourValues[index]] || [];
+        } else {
+            display.value = minuteValues[index - 2];
+            display.activeSegments = digitToSegments[minuteValues[index - 2]] || [];
+        }
+    });
+
+    updateUserInput();
+}
+
 
 onMounted(() => {
     window.addEventListener('keypress', handleKeyPress)
     document.addEventListener('click', handleScreenClick)
+    setInitialDisplay(6, 45)
 })
 
 onUnmounted(() => {
@@ -610,45 +591,11 @@ onUnmounted(() => {
     transform: perspective(500px) rotateX(5deg);
 }
 polygon {
-    fill: #19202b;
+    fill: #f3c9c9;
 }
 
 polygon.active {
-    fill: #F00;
-}
-
-.button-10 {
-  transform-style: preserve-3d;
-}
-
-.button-10::before {
-  border-radius: inherit;
-  box-shadow: 0 0 0 2px #828282, 0 0.625em 0 0 #636a78;
-  transform: translate3d(0, 0.75em, -1em);
-  transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
-}
-
-.button-selected {
-  transform: translate3d(0, 0.45em, 0);
-}
-
-.button-10:not(.button-selected):hover {
-  transform: translate3d(0, 0.25em, 0);
-}
-
-.button-selected::before {
-  box-shadow: 0 0 0 2px #828282, 0 0.5em 0 0 #636a78;
-  transform: translate3d(0, 0.3em, -1em);
-}
-
-.button-10:not(.button-selected):hover::before {
-  box-shadow: 0 0 0 2px #828282, 0 0.5em 0 0 #636a78;
-  transform: translate3d(0, 0.8rem, -1em);
-}
-
-.button-10:active::before {
-  box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
-  transform: translate3d(0, 0.3em, -1em);
+    fill: #2b1d1d;
 }
 
 @keyframes shake {

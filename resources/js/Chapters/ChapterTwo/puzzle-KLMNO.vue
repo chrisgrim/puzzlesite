@@ -33,7 +33,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './puzzle-KLMNO-component.vue';
+import Puzzle from './component-graffiti.vue';
 
 const props = defineProps({
     user: Object,

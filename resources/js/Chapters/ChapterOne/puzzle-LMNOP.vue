@@ -5,15 +5,18 @@
         <Header :puzzle="props.puzzle" />
 
         <div class="mt-14" style="white-space: pre-wrap;">
-            <p>Arthur lay in bed, the early morning light barely touching the edges of his room, cradling the small clock in his hands. The brass knob on the face of the device gleamed faintly as he turned it to the first of four "radio stations." Each station displayed a written question on the clock’s small screen, waiting for him to respond by adjusting the hour and minute hands. It wasn’t a complicated device, but it was just enough to stir his mind from sleep, offering the perfect blend of challenge and clarity to start his day.</p>
+            <p>Arthur sat at his kitchen table, sipping his morning tea as he unfolded the newspaper. His eyes lingered on a familiar puzzle type that had quickly become a new favorite. This challenge, unlike the standard crosswords he was so accustomed to, required him to find the common thread between three seemingly unrelated words. The puzzle presented nine words in total, broken into three sets of three. His task was to identify the single word that linked each set. It was a game of patterns and associations, a perfect mental exercise to accompany his breakfast.</p>
 
-            <p>As he submitted his answers, the clock flashed not the time, but a small part of the hidden solution. Each correct response lit up a segment, giving him just one piece of the final puzzle. Arthur knew that by the time he solved the last station’s riddle, he would have everything he needed. The answer wasn’t in the mechanics or the time, but in the flashes of those brief clues. And like every puzzle in his life, it was about uncovering the hidden word that tied it all together—an unspoken reminder that answers were always just beneath the surface, waiting to be found.</p>
+            <p>As Arthur worked his way through the puzzle, he appreciated the subtle complexity. What seemed random at first often revealed an elegant connection once he took the time to consider each set carefully. After solving the first three sets, he found himself, as always, trying to anticipate the overall structure. Though each individual word had its own solution, Arthur knew there was often something more hidden in the puzzle, some deeper layer connecting everything. He enjoyed this type of challenge, one that echoed his view of the world—that if you looked closely enough, you could always find the connection that brought everything together.</p>
 
-            <h2 class="mt-10">Answer: DAYS</h2>
+            <div class="w-full h-2 bg-black"></div>
+            <p>Puzzle needs a second layer</p>
+            <h2 class="mt-14">Answer: BRING</h2>
         </div>
 
         <!-- Puzzle Section -->
-        <div id="puzzle" class="puzzle flex flex-row items-center justify-center py-16">
+        <div id="puzzle" class="puzzle">
+            <p>Long Puzzle. Vin Tenn but 5 times. Then the answer is the first letter of each Ven Tenn.</p>
             <Puzzle></Puzzle>
         </div>
 
@@ -32,7 +35,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './puzzle-LMNOP-component.vue';
+import Puzzle from './puzzle-connections-component.vue';
 
 const props = defineProps({
     user: Object,
@@ -42,10 +45,4 @@ const props = defineProps({
 });
 
 
-
-
-
-
 </script>
-
-
