@@ -32,7 +32,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import Header from '@/Global/header.vue';
 import SubmissionSection from '@/Global/submissionSection.vue';
-import Puzzle from './component-exercises.vue';
+import Puzzle from './component-laser-grid.vue';
 
 const props = defineProps({
     user: Object,

@@ -26,10 +26,10 @@ import { ref } from 'vue';
 
 // State to hold words
 const words = ref([
-    { id: 1, word: 'Apple' }, { id: 2, word: 'Book' }, { id: 3, word: 'Cat' }, { id: 4, word: 'Dog' },
-    { id: 5, word: 'Elephant' }, { id: 6, word: 'Flower' }, { id: 7, word: 'Guitar' }, { id: 8, word: 'Hat' },
-    { id: 9, word: 'Island' }, { id: 10, word: 'Juice' }, { id: 11, word: 'Kite' }, { id: 12, word: 'Lion' },
-    { id: 13, word: 'Moon' }, { id: 14, word: 'Notebook' }, { id: 15, word: 'Orange' }, { id: 16, word: 'Piano' }
+    { id: 1, word: 'Apple', group: 1 }, { id: 2, word: 'Book', group: 2 }, { id: 3, word: 'Cat', group: 3 }, { id: 4, word: 'Dog', group: 3 },
+    { id: 5, word: 'Elephant', group: 4 }, { id: 6, word: 'Flower', group: 1 }, { id: 7, word: 'Guitar', group: 2 }, { id: 8, word: 'Hat', group: 4 },
+    { id: 9, word: 'Island', group: 1 }, { id: 10, word: 'Juice', group: 1 }, { id: 11, word: 'Kite', group: 4 }, { id: 12, word: 'Lion', group: 3 },
+    { id: 13, word: 'Moon', group: 4 }, { id: 14, word: 'Notebook', group: 2 }, { id: 15, word: 'Orange', group: 3 }, { id: 16, word: 'Piano', group: 2 }
 ]);
 
 // State to track selected word ids
@@ -49,12 +49,23 @@ const selectWord = (id) => {
 
 // Function to check the word selection
 const checkSelection = () => {
-    const isCorrect = selectedWords.value.length === 4;
+    if (selectedWords.value.length !== 4) {
+        alert('Please select exactly 4 words.');
+        return;
+    }
+
+    const selectedWordObjects = selectedWords.value.map(id => 
+        words.value.find(word => word.id === id)
+    );
+
+    const firstGroup = selectedWordObjects[0].group;
+    const isCorrect = selectedWordObjects.every(word => word.group === firstGroup);
+
     if (isCorrect) {
-        alert('Correct selection!');
+        alert('Correct selection! All words belong to the same group.');
         selectedWords.value = [];
     } else {
-        alert('Incorrect selection, please try again.');
+        alert("Incorrect selection. These words don't belong to the same group. Please try again.");
     }
 };
 
